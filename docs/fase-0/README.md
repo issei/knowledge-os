@@ -22,7 +22,7 @@ Especificação verificável do MVP, no formato Spec-Driven Development. Nenhuma
 | [05-adrs.md](05-adrs.md) | 0E | ADR-kos-001..008 (propostos) |
 | [06-plano-de-testes.md](06-plano-de-testes.md) | — | Níveis, fixtures, testes transversais, critério de pronto |
 | [07-riscos.md](07-riscos.md) | — | RSK-01..14 |
-| [08-backlog.md](08-backlog.md) | 0F | BL-00..23 por dependência; BL-01..14 = caminho vertical mínimo |
+| [08-backlog.md](08-backlog.md) | 0F | BL-00..23 por dependência; BL-01..14 + BL-22 = caminho vertical mínimo |
 | [09-consistencia.md](09-consistencia.md) | — | Matriz de rastreabilidade, verificações feitas, questões abertas Q-01..19 |
 
 ## Resumo das decisões propostas
@@ -41,9 +41,9 @@ Especificação verificável do MVP, no formato Spec-Driven Development. Nenhuma
 
 - **Fato:** não há implementação do Knowledge OS em nenhum local acessível; só a página `knowledge-os-presentation` do site.
 - **Fato:** a página tem contradição interna (18 KPIs em 4 camadas vs. 22 KPIs em 5 camadas) e `AGENTS.md` cita 36 páginas onde há 46. Ambos viraram casos do golden set.
-- **Inferência:** "repositório atual" pode ser o `mauricio-site` como corpus-piloto ou outro repositório ainda não conectado (Q-01).
+- **Decidido (2026-10-21):** corpus-alvo `mauricio-site` (Q-01), Python (Q-02), HTML no MVP (Q-05), repositório `issei/knowledge-os` (Q-19). Ver `09-consistencia.md` §4.
 - **Lacuna:** corpus corporativo-alvo, formatos PDF/DOCX reais, perguntas de usuários reais.
 
 ## Antes da Fase 1
 
-Aprovar ou alterar os ADRs e responder pelo menos Q-01, Q-02, Q-05 e Q-19 (`09-consistencia.md` §3).
+Aprovar ou alterar os ADRs (BL-00). As questões Q-01, Q-02, Q-05 e Q-19 já foram respondidas.

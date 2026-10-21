@@ -30,7 +30,7 @@ Convenção usada em todos os documentos desta pasta:
    - Gêmeos gerados em inglês: `src/en/knowledge-os-presentation.html`, `public/en/knowledge-os-presentation.md`.
    - Citações em navegação/ecossistema: `specs/SPEC_ECOSYSTEM.md:48,86-88`, `specs/RESEARCH_MAPPING.md:39,77,132`, `ECOSYSTEM.md:32,71`, `scripts/seo/pages.mjs`, `scripts/i18n/i18n-manifest.json`, `src/js/eco-nav.js`.
 3. **[FATO] A pasta compartilhada não contém material do Knowledge OS.** `planejamento-fde/PLANEJAMENTO-FDE.md:192` exclui explicitamente "cases de MCP, RAG, evals, guardrails" até haver "um case real com fluxo, contrato, falha, fallback e teste".
-4. **[INFERÊNCIA]** "Repositório atual" na solicitação pode significar (a) o `mauricio-site` como corpus-piloto, ou (b) outro repositório ainda não conectado onde o Knowledge OS será construído. **[ABERTO] Q-01.** Esta especificação foi escrita para funcionar nos dois casos: o golden set usa o `mauricio-site` como **corpus-piloto C0** (evidências reais, verificadas), e os casos do corpus corporativo-alvo ficam registrados como lacuna.
+4. **[DECIDIDO 2026-10-21]** Issei definiu o `mauricio-site` como corpus-alvo (Q-01). Registro original: **[INFERÊNCIA]** "Repositório atual" na solicitação pode significar (a) o `mauricio-site` como corpus-piloto, ou (b) outro repositório ainda não conectado onde o Knowledge OS será construído. **[ABERTO] Q-01.** Esta especificação foi escrita para funcionar nos dois casos: o golden set usa o `mauricio-site` como **corpus-piloto C0** (evidências reais, verificadas), e os casos do corpus corporativo-alvo ficam registrados como lacuna.
 
 ## 3. Inventário de artefatos existentes relevantes
 
@@ -96,7 +96,7 @@ A arquitetura provisória exclui embeddings, bancos vetoriais, grafos e orquestr
 
 | Fato | Impacto |
 |---|---|
-| 907 arquivos versionados; 402 `.md`, 144 `.js`, 104 `.mjs`, 85 `.html`, 26 `.json`, 9 `.yaml`, 9 `.py`, 38 `.png` | Parsers nativos cobrem a maior parte. HTML não está na lista de parsers da arquitetura provisória: **[ABERTO] Q-05**. |
+| 907 arquivos versionados; 402 `.md`, 144 `.js`, 104 `.mjs`, 85 `.html`, 26 `.json`, 9 `.yaml`, 9 `.py`, 38 `.png` | Parsers nativos cobrem a maior parte. HTML não estava na lista de parsers da arquitetura provisória; Issei decidiu incluí-lo (Q-05, 2026-10-21). |
 | 14 caminhos aparecem entre aspas em `git ls-files` (padrão `core.quotepath`), ex.: `docs/specs/pages/apresentação/…` | A descoberta precisa usar `git ls-files -z` e tratar caminho como bytes/UTF-8 NFC. |
 | Arquivos gerados versionados (`src/en/**`, `public/en/**`, blocos `PF:*`/`CV:*`) | Precisam de classificação "derivado" para não competir com a fonte (`AGENTS.md`, seção i18n). |
 | 0 symlinks, 0 submódulos, 0 arquivos LFS | Casos tratados no contrato, mas sem exemplo real em C0. |

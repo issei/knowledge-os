@@ -66,7 +66,7 @@ Prefixo `ADR-kos-NNN`, para não colidir com `docs/specs/14-adr/ADR-NNN` (LifeOS
 2. Tree-sitter para código: sintaxe e símbolos de topo, com versão da gramática no perfil. Linguagens iniciais: as presentes no corpus-alvo; em C0, JavaScript (`.js`, `.mjs`, `.cjs`) e Python.
 3. Docling só atrás do perfil opcional `docling`, para PDF/DOCX, com localizador de página e verificação no máximo `verified_normalized`.
 4. Todo parser é encapsulado num perfil com fingerprint; trocar versão ou configuração invalida o cache de forma explícita.
-5. HTML: **decisão aberta (Q-05)**. Proposta: parser HTML nativo da linguagem escolhida, extraindo texto visível com offsets, tratado como "documento", com páginas geradas marcadas como `generated`.
+5. HTML: **decidido (Q-05, Issei, 2026-10-21): entra no MVP.** Abordagem: parser HTML nativo da linguagem escolhida, extraindo texto visível com offsets, tratado como "documento", com páginas geradas marcadas como `generated`.
 
 **Alternativas.** (a) Docling para tudo: rejeitada, perde offsets de texto e acrescenta dependência pesada. (b) Expressões regulares para código: rejeitada, símbolos frágeis. (c) Indexar arquivo inteiro sem recorte: rejeitada, citações imprecisas e ranking pior.
 
@@ -132,7 +132,7 @@ Toda saída tem `--json` com esquema versionado (`schema: "kos.<comando>.v1"`). 
 
 **Consequências.** (+) Testável por processo, scriptável. (−) Esquemas JSON passam a ser contrato público e precisam de versionamento.
 
-**Riscos.** Linguagem de implementação indefinida (Q-02) afeta distribuição e o acesso a Tree-sitter/Docling.
+**Riscos.** Distribuição do executável Python e das gramáticas Tree-sitter (linguagem decidida em Q-02: Python).
 
 **Evidências necessárias.** TC-CLI-01..04.
 

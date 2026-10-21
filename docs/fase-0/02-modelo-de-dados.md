@@ -44,7 +44,7 @@ Os formatos não têm a mesma estrutura, então o localizador é polimórfico, c
 | YAML | `byte_range` | `struct_path` (ex.: `$.navigation[2].nodes`) | Ponteiro só quando o parser fornecer posição; senão, só bytes. |
 | JSON | `byte_range` | `struct_path` em JSON Pointer (RFC 6901) | Idem. |
 | Código | `byte_range` | linhas, `symbol_id` | Símbolo vem do Tree-sitter com versão da gramática. |
-| HTML (se aprovado, Q-05) | `byte_range` | linhas, seletor estrutural | Texto extraído perde marcação; offsets apontam para o original. |
+| HTML (aprovado, Q-05) | `byte_range` | linhas, seletor estrutural | Texto extraído perde marcação; offsets apontam para o original. |
 | PDF/DOCX via Docling | `page_range` | bloco/ordem na página, `bbox` opcional | **Sem bytes do original.** Verificação é por texto normalizado na página extraída; estado máximo é `verified_normalized`, nunca `verified_exact`. |
 
 Estados de verificação de um localizador (usados também nas citações, `03-contratos.md` CTR-07):

@@ -14,9 +14,9 @@ corpus_piloto: C0 = issei/mauricio-site @ 73570bbc9b99e2a1e44d6844b9375bc4aa16e3
 | Corpus | Situação | Uso |
 |---|---|---|
 | **C0** `issei/mauricio-site` @ `73570bbc9b99e2a1e44d6844b9375bc4aa16e357` | Disponível. Tem specs, ADRs, contratos, código JS/MJS, testes, JSON/YAML e uma fonte com contradição interna. | Golden set inicial (§3). Todas as evidências abaixo foram conferidas nesta inspeção, com linha. |
-| **C1** corpus corporativo-alvo do Knowledge OS Enterprise | **Desconhecido** ([ABERTO] Q-01). | Casos GS-ENT-* ficam como lacuna (§4). Nada foi inventado. |
+| ~~C1 corpus corporativo-alvo~~ | **Não se aplica**: Issei decidiu em 2026-10-21 (Q-01) que o corpus-alvo é o próprio `mauricio-site`. | — |
 
-C0 é **representativo de forma**, não de escala nem de domínio: 907 arquivos, sem PDF/DOCX versionado, poucas linguagens. Resultados em C0 não autorizam metas para C1.
+C0 é **representativo de forma**, não de escala nem de domínio: 907 arquivos, sem PDF/DOCX versionado, poucas linguagens. Com a decisão Q-01, C0 é o corpus-alvo; ainda assim, o golden set precisa crescer (§6.4) antes de qualquer meta.
 
 ## 2. Esquema de um caso
 
@@ -118,7 +118,7 @@ Todas as linhas abaixo foram lidas nesta inspeção em `73570bb`.
     afirmacoes_obrigatorias: ["P95 < 800 ms é uma meta declarada na página"]
     afirmacoes_proibidas: ["o sistema atinge P95 < 800 ms"]
   criterios: [recall@k, citacao_exata, cobertura_afirmacoes, taxa_sem_suporte]
-  nota: "Depende de Q-05 (HTML como formato). Se HTML ficar fora, o caso migra para no_answer com código out_of_scope."
+  nota: "Usa o parser HTML (Q-05 decidido: HTML entra no MVP)."
 
 - id: GS-CODE-001
   classe: code
@@ -197,7 +197,7 @@ Todas as linhas abaixo foram lidas nesta inspeção em `73570bb`.
     afirmacoes_obrigatorias: ["a mesma página diz 18 (4 camadas) e 22 (5 camadas)"]
     afirmacoes_proibidas: ["um único número sem mencionar a divergência"]
   criterios: [recall@k, citacao_exata, deteccao_de_conflito]
-  nota: "Depende de Q-05 (HTML)."
+  nota: "Usa o parser HTML (Q-05 decidido)."
 
 - id: GS-CONF-003
   classe: conflict
@@ -263,10 +263,10 @@ Todas as linhas abaixo foram lidas nesta inspeção em `73570bb`.
 
 | ID | Lacuna | Depende de |
 |---|---|---|
-| GS-ENT-* | Casos do corpus corporativo-alvo (C1): perguntas reais de usuários, documentos e repositórios reais. | Q-01 |
+| GS-ENT-* | ~~Casos de um corpus corporativo separado~~. Resolvido por Q-01: o crescimento acontece no próprio `mauricio-site` (BL-19). | — |
 | GS-DOC-* | Casos de PDF/DOCX via Docling com localizador de página. C0 não tem esses formatos versionados. Candidato: um corpus de teste próprio (Q-13); o TGI de 2004 na pasta do projeto **não** deve ser usado sem decisão de Issei, pois tem pendência de consentimento de coautores. | Q-13 |
 | GS-HIST-* | Perguntas sobre revisões antigas ("o que dizia o ADR X antes do commit Y"). | Q-04 |
-| GS-MULTI-* | Perguntas que cruzam repositórios. | Q-01 |
+| GS-MULTI-* | Perguntas que cruzam repositórios. Fora do MVP, que tem um só repositório (Q-01). | — |
 | Rotulagem | Os julgamentos acima foram feitos por mim numa leitura. Precisam de revisão humana (segundo anotador) antes de virarem linha de base oficial. | Q-14 |
 
 ## 5. Métricas

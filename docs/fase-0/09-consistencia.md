@@ -42,7 +42,7 @@ data: 2026-10-21
 | 3 | Todo ID de teste citado nos requisitos está definido | Conferido por script (TC-* de `01-requisitos.md` contra `03-contratos.md` e `06-plano-de-testes.md`). |
 | 4 | Toda questão Q-* citada está definida em §3 | Conferido por script. |
 | 5 | Contratos coerentes com o modelo de dados | Estados de verificação, códigos de abstenção e `outcome` são os mesmos nos `CHECK` de `audit.sqlite` e em CTR-07/08/09. `E_*` usados nos contratos estão no catálogo de CTR-10. |
-| 6 | Golden set coerente com a arquitetura | **Tensão registrada:** GS-SPEC-003 e GS-CONF-002 dependem de HTML, que não está na lista de parsers aprovada (Q-05). Até BL-22, esses casos rodam com o perfil de texto (marcação crua) ou viram `out_of_scope`, conforme a resposta de Q-05; o relatório B0 deve marcá-los. |
+| 6 | Golden set coerente com a arquitetura | **Resolvida pela decisão Q-05 (§4).** Registro original: GS-SPEC-003 e GS-CONF-002 dependem de HTML, que não está na lista de parsers aprovada (Q-05). Até BL-22, esses casos rodam com o perfil de texto (marcação crua) ou viram `out_of_scope`, conforme a resposta de Q-05; o relatório B0 deve marcá-los. |
 | 7 | Golden set não mistura recuperação e resposta | Cada caso declara `fontes_relevantes` (recuperação) separado de `resultado_esperado` (resposta); métricas em §5.1 e §5.3 são calculadas separadamente. |
 | 8 | Nenhuma meta numérica sem justificativa | Nenhuma meta fixada. Números da página pública registrados como hipóteses (DIV-06, DIV-07). O "10 casos por classe" de `04-benchmark.md` §6.4 está declarado como ponto de partida para discussão. |
 | 9 | Nenhum arquivo existente alterado | Sim. Os únicos arquivos escritos estão em `/mnt/project-files/knowledge-os/fase-0/`. Nada foi instalado, nada foi enviado a serviço externo, nenhum commit foi feito. |
@@ -53,11 +53,11 @@ data: 2026-10-21
 
 | ID | Questão | Proposta padrão | Bloqueia |
 |---|---|---|---|
-| **Q-01** | Qual é o corpus/repositório-alvo do Knowledge OS Enterprise? "Repositório atual" é o `mauricio-site`? | Usar `mauricio-site` como corpus-piloto C0 (já feito no golden set) e definir C1 | BL-19, metas |
-| **Q-02** | Linguagem de implementação | Python (bindings maduros de Tree-sitter e Docling, `sqlite3` com FTS5 na biblioteca padrão). Alternativa: Node, alinhado ao repositório do site | BL-01 |
+| **Q-01** | Qual é o corpus/repositório-alvo? | **DECIDIDO (Issei, 2026-10-21): `issei/mauricio-site`.** C0 passa a ser o corpus-alvo. | — |
+| **Q-02** | Linguagem de implementação | **DECIDIDO (Issei, 2026-10-21): Python.** | — |
 | **Q-03** | O que fazer com a página `knowledge-os-presentation`, que descreve GraphRAG/vetores/agentes | Manter e, numa tarefa separada, rotular como "visão-alvo" | — |
 | Q-04 | Indexar histórico completo ou só a ponta + revisões fixadas | Só ponta + fixadas no MVP | GS-HIST-* |
-| **Q-05** | HTML entra como formato do MVP? | Sim, como documento (BL-22), porque o site é majoritariamente HTML | GS-SPEC-003, GS-CONF-002 |
+| **Q-05** | HTML entra como formato do MVP? | **DECIDIDO (Issei, 2026-10-21): sim.** O parser HTML entra no caminho vertical mínimo (BL-22 antes de BL-08). | — |
 | Q-06 | Versão do SQLite na máquina de Issei (precisa de FTS5) | Verificar no BL-01 | BL-01 |
 | Q-07 | Migração de esquema no MVP | Mudança de esquema = rebuild | — |
 | Q-08 | Multiusuário e controle de acesso por documento | Fora do MVP | BL-20 remoto |
@@ -74,3 +74,14 @@ data: 2026-10-21
 | **Q-19** | Onde os documentos e o código vão morar | Repositório próprio (`knowledge-os`), não o `mauricio-site`, cujo merge em `main` publica o site | BL-01 |
 
 As marcadas em negrito são as que mais mudam o desenho.
+
+## 4. Decisões registradas (Issei, 2026-10-21)
+
+| Questão | Decisão | Efeito nos documentos |
+|---|---|---|
+| Q-19 | Repositório próprio `issei/knowledge-os` | Documentos em `docs/fase-0/` deste repositório. |
+| Q-01 | Corpus-alvo = `issei/mauricio-site` | C0 deixa de ser só piloto e vira o corpus do MVP; não há C1 separado. GS-ENT-* e GS-MULTI-* saem das lacunas; BL-19 vira a expansão do golden set no próprio `mauricio-site`. RSK-01 cai para baixa probabilidade. |
+| Q-02 | Python | Módulos candidatos viram o pacote Python `kos`. Bibliotecas concretas (parser Markdown, YAML e JSON com posições, bindings do Tree-sitter) são escolhidas e justificadas em BL-05, BL-06 e BL-15, com TC-PRS-01 como critério. |
+| Q-05 | HTML entra no MVP | ADR-kos-003 item 5 deixa de ser aberto. BL-22 passa para dentro do caminho vertical (BL-08 depende dele). GS-SPEC-003 e GS-CONF-002 deixam de ser condicionais. A tensão do achado 6 (§2) está resolvida. |
+
+Os ADRs continuam **Propostos** até Issei aprová-los (BL-00).
