@@ -9,11 +9,11 @@ Knowledge OS Enterprise: recuperação de conhecimento técnico a partir de docu
 
 ## Estado
 
-Fase 1 em andamento. Pronto: BL-01 (`kos init`), BL-02 (repositórios-fixture para testes), BL-03 (descoberta, `kos discover`), BL-04 (perfis de processamento e chave de fragmento), BL-05 (normalizador e parser Markdown com offsets exatos), BL-06 (JSON, YAML e texto) e BL-07 (código como texto, provisório até o Tree-sitter).
+Fase 1 em andamento. Pronto: BL-01 (`kos init`), BL-02 (repositórios-fixture para testes), BL-03 (descoberta, `kos discover`), BL-04 (perfis de processamento e chave de fragmento), BL-05 (normalizador e parser Markdown com offsets exatos), BL-06 (JSON, YAML e texto), BL-07 (código como texto, provisório até o Tree-sitter) e BL-22 (HTML, texto visível com posições).
 
 ## Uso
 
-Requer Python ≥ 3.11 com SQLite compilado com FTS5. Dependências externas: `markdown-it-py` (Markdown com mapa de linhas, BL-05) e `PyYAML` (YAML com posição de cada nó, BL-06), as duas escolhidas pelo teste de offsets exatos; JSON e texto usam só a biblioteca padrão. Instale com `pip install -e .`.
+Requer Python ≥ 3.11 com SQLite compilado com FTS5. Dependências externas: `markdown-it-py` (Markdown com mapa de linhas, BL-05) e `PyYAML` (YAML com posição de cada nó, BL-06), as duas escolhidas pelo teste de offsets exatos; JSON, HTML e texto usam só a biblioteca padrão. Instale com `pip install -e .`.
 
 ```sh
 PYTHONPATH=src python -m kos init            # cria ./.kos/index.sqlite e ./.kos/audit.sqlite

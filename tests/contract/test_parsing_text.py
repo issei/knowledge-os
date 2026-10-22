@@ -1,4 +1,4 @@
-"""Testes de contrato do texto puro, código como texto e do registro de parsers (BL-06, BL-07)."""
+"""Testes de contrato do texto puro, código como texto e do registro de parsers (BL-06, BL-07, BL-22)."""
 
 import unittest
 
@@ -54,7 +54,7 @@ class RegistryTest(unittest.TestCase):
         cases = {
             "text/markdown": "md-native", "application/json": "json-native",
             "application/yaml": "yaml-native", "text/javascript": "code-as-text",
-            "text/x-python": "code-as-text", "text/plain": "text-windows",
+            "text/x-python": "code-as-text", "text/plain": "text-windows", "text/html": "html-visible-text",
             "application/octet-stream": "text-windows",
         }
         for media, name in cases.items():
@@ -62,14 +62,16 @@ class RegistryTest(unittest.TestCase):
             self.assertEqual(profile.profile_name, name, media)
             self.assertEqual(registry.profile_for(media), profile)
 
-    def test_html_aguarda_o_bl22(self):
-        profile, result = registry.parse(b"<p>x</p>", "text/html")
-        self.assertIsNone(profile)
-        self.assertEqual((result.status, result.reason_code), ("skipped", "E_PARSER_UNAVAILABLE"))
+    def test_html_usa_texto_visivel(self):
+        profile, result = registry.parse(b"<p>a &amp; b</p>", "text/html")
+        self.assertEqual(profile.profile_name, "html-visible-text")
+        self.assertEqual(result.fragments[0].text, "a & b")
+        self.assertEqual(registry.expected_text("text/html", b"<p>a &amp; b</p>"), "a & b")
+        self.assertEqual(registry.expected_text("text/plain", b"a &amp; b\r\n"), "a &amp; b\n")
 
     def test_perfis_tem_impressoes_digitais_distintas(self):
-        from kos.parsing import json_doc, markdown, yaml_doc
-        profiles = [markdown.PROFILE, json_doc.PROFILE, yaml_doc.PROFILE, text.PROFILE, text.CODE_PROFILE]
+        from kos.parsing import html_doc, json_doc, markdown, yaml_doc
+        profiles = [html_doc.PROFILE, markdown.PROFILE, json_doc.PROFILE, yaml_doc.PROFILE, text.PROFILE, text.CODE_PROFILE]
         self.assertEqual(len({p.fingerprint for p in profiles}), len(profiles))
 
 

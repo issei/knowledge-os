@@ -56,7 +56,7 @@ Verification = verified_exact | verified_normalized | derived | unverified
 
 **Invariantes**
 1. Função pura de `(blob_bytes, Profile)`: sem rede, sem relógio, sem estado global.
-2. Para formatos textuais, `blob_bytes[start_byte:end_byte]` decodificado e normalizado pelo `normalizer_version` produz exatamente `text` (é a base de `verified_exact`).
+2. Para formatos textuais, `blob_bytes[start_byte:end_byte]` decodificado e normalizado pelo `normalizer_version` produz exatamente `text` (é a base de `verified_exact`). **Exceção: HTML**, cujo `text` é o texto visível do recorte, `visible_text(normalize(recorte))`; a função depende só do recorte, então a citação é reconferível, mas como `verified_normalized`.
 3. Linhas são 1-based e inclusivas; `\r\n` conta como uma quebra; offsets são do blob original.
 4. Ordinais começam em 0 e são contíguos.
 5. Fragmentos não se sobrepõem dentro do mesmo perfil, exceto `symbol` aninhado, que referencia o pai.
@@ -68,7 +68,7 @@ Verification = verified_exact | verified_normalized | derived | unverified
 - YAML/JSON: um fragmento por nó de primeiro e segundo nível com `struct_path` (JSON Pointer); o fragmento de um membro de objeto começa na chave. Sintaxe inválida (ex.: JSON com comentários) cai em janelas de texto, com `parsed_with_warnings` e `E_PARSE_SYNTAX`.
 - Código: um fragmento por símbolo de topo (função, classe, export) mais um fragmento "resto do arquivo"; testes reconhecidos (`describe`/`it`/`test`) viram `test_case`.
 - Texto puro: janelas por parágrafo (até 40 linhas). Até o BL-15, código usa as mesmas janelas (até 60 linhas) com `fragment_kind = code_block`.
-- HTML: sem parser até o BL-22; sai como `skipped` com `E_PARSER_UNAVAILABLE`.
+- HTML: uma seção por cabeçalho `h1`..`h6` com `heading_path`, como no Markdown; o que vem antes do primeiro cabeçalho (título, `meta description`, navegação) é a seção sem `heading_path`; seções com mais de 80 linhas são divididas no início de um elemento de bloco. Conteúdo de `script`, `style`, `template`, `noscript`, `svg`, `math`, `iframe`, `object` e `canvas` não entra.
 
 **Falhas esperadas:** `E_DECODE` (encoding), `E_PARSE_SYNTAX` (com `parsed_with_warnings` quando houver recuperação parcial do Tree-sitter), `E_PARSER_UNAVAILABLE`, `E_TIMEOUT_PARSE`, `E_TOO_MANY_FRAGMENTS`.
 
@@ -194,7 +194,7 @@ Formato humano canônico (CLI):
 1. `commit_oid` é sempre o hex completo no JSON; a forma humana pode abreviar a 12 caracteres, nunca menos.
 2. Verificação no momento da montagem: o blob é relido do Git pelo `blob_oid`; `verified_exact` só se `sha256(normalize(blob[start:end])) == quoted_sha256`.
 3. Se o blob não puder ser lido (revisão podada, repositório ausente), `verification = unverified` e a CLI imprime o rótulo **"não verificada"**. Nunca há omissão do rótulo.
-4. Linhas derivadas de bytes sem releitura = `derived`. Página do Docling = no máximo `verified_normalized`.
+4. Linhas derivadas de bytes sem releitura = `derived`. Página do Docling e fragmento HTML (texto visível) = no máximo `verified_normalized`.
 5. O trecho citado é um recorte literal do texto do fragmento, nunca uma paráfrase. Recortes podem ser encurtados com `…` explícito, mantendo `quoted_sha256` do trecho inteiro.
 6. Citações apontam para a fonte, nunca para o arquivo gerado quando a fonte estiver no mesmo índice (ex.: `public/x.md` em vez de `public/en/x.md`), salvo pedido explícito.
 

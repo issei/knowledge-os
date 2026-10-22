@@ -3,7 +3,8 @@
 Uso: PYTHONPATH=src python scripts/dev/check_offsets.py REPO [--rev REV] [--policy ARQ]
 
 Lê os blobs direto do Git (nada da cópia de trabalho), escolhe o parser pelo
-tipo de mídia e confere `normalize(recorte) == texto` em cada fragmento. Sai
+tipo de mídia e confere que o texto de cada fragmento se reconstrói do recorte
+(`registry.expected_text`). Sai
 com 1 se algum fragmento não bater ou se um parser levantar exceção.
 """
 
@@ -17,7 +18,6 @@ from pathlib import Path
 
 from kos.discovery import Policy, discover
 from kos.parsing import registry
-from kos.parsing.normalize import normalize
 
 
 def main() -> int:
@@ -48,7 +48,7 @@ def main() -> int:
             problems.append((f.path_text, result.status, result.reason_code or "", *result.warnings))
         for frag in result.fragments:
             loc = frag.locator
-            if normalize(blob[loc.start_byte:loc.end_byte]) != frag.text:
+            if registry.expected_text(f.media_type, blob[loc.start_byte:loc.end_byte]) != frag.text:
                 st["divergentes"] += 1
                 problems.append((f.path_text, "divergente", frag.ordinal, loc.start_line, loc.end_line))
     print(f"commit {commit}: {len(eligible)} arquivos elegíveis")
