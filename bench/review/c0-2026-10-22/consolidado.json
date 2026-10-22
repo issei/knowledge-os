@@ -1,0 +1,970 @@
+{
+  "schema": "kos.review.v1",
+  "golden": "bench/golden/c0.yaml",
+  "revisao": "73570bbc9b99e2a1e44d6844b9375bc4aa16e357",
+  "resumo": {
+    "casos": 14,
+    "concordantes": 9,
+    "divergentes": 5,
+    "concordancia_tipo": 12,
+    "concordancia_evidencia": 11,
+    "casos_com_evidencia_esperada": 11,
+    "casos_com_defeito_p3_provado": 9,
+    "evidencias_p2_nao_conferidas": 0,
+    "vazamento_lexical": 1,
+    "amostra_para_o_arbitro": [
+      "GS-ABS-001",
+      "GS-CODE-001",
+      "GS-SPEC-003"
+    ],
+    "semente_da_amostra": 20261022,
+    "perguntas_p1": 10
+  },
+  "casos": [
+    {
+      "id": "GS-LEX-001",
+      "classe": "lexical",
+      "pergunta": "Qual comando roda o quality gate do site?",
+      "outcome_esperado": "answered",
+      "p2": {
+        "tipo": "resposta",
+        "resposta": "npm run gate (script do package.json que executa node scripts/quality-gate.mjs).",
+        "confianca": "alta",
+        "evidencias": [
+          {
+            "caminho": "package.json",
+            "linhas": "14",
+            "trecho": "\"gate\": \"node scripts/quality-gate.mjs\",",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "AGENTS.md",
+            "linhas": "39",
+            "trecho": "- `npm run gate` já cobra que os espelhos estejam em dia.",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "scripts/quality-gate.mjs",
+            "linhas": "3",
+            "trecho": "* Quality Gate — rodado localmente antes de todo push e também no CI.",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "Verificado no package.json. O mesmo script aceita flags (--full, --no-build, --no-e2e etc., scripts/quality-gate.mjs:19-25). AGENTS.md:146 também exige 'npx playwright test', mas o quality gate é o npm run gate."
+      },
+      "tipo_concorda": true,
+      "evidencia_concorda": true,
+      "p3": {
+        "veredito": "sem_defeito",
+        "defeitos": []
+      },
+      "vazamento_lexical": {
+        "palavras": [
+          "gate",
+          "quality"
+        ],
+        "vazamento": false
+      },
+      "concordante": true,
+      "motivos_divergencia": []
+    },
+    {
+      "id": "GS-LEX-002",
+      "classe": "lexical",
+      "pergunta": "Qual ferramenta faz a tradução do gêmeo em inglês do site?",
+      "outcome_esperado": "answered",
+      "p2": {
+        "tipo": "resposta",
+        "resposta": "Argos Translate, rodando localmente (scripts/i18n/, via npm run i18n:sync), sem LLM.",
+        "confianca": "alta",
+        "evidencias": [
+          {
+            "caminho": "AGENTS.md",
+            "linhas": "35",
+            "trecho": "- A tradução é **local** (Argos Translate, `scripts/i18n/`). **Não use LLM para",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "scripts/i18n/README.md",
+            "linhas": "3-5",
+            "trecho": "Espelha os ativos públicos em PT-BR para `src/en/` e `public/en/` usando **Argos Translate** — tradução automática neural open-source, rodando na CPU da máquina de build. **Zero chamadas de API de LLM, zero custo de token.**",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "scripts/i18n/README.md",
+            "linhas": "56",
+            "trecho": "`--engine argos` é o único que traduz de verdade. Os outros existem para que a",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "Os motores identity/mock/mangle existem só para teste; o README diz que argos é o único que traduz de verdade."
+      },
+      "tipo_concorda": true,
+      "evidencia_concorda": true,
+      "p3": {
+        "veredito": "sem_defeito",
+        "defeitos": []
+      },
+      "vazamento_lexical": {
+        "palavras": [
+          "traducao"
+        ],
+        "vazamento": false
+      },
+      "concordante": true,
+      "motivos_divergencia": []
+    },
+    {
+      "id": "GS-SPEC-001",
+      "classe": "spec_fact",
+      "pergunta": "Qual é o piso de contraste da Camada 3 da página apresentacao?",
+      "outcome_esperado": "answered",
+      "p2": {
+        "tipo": "resposta",
+        "resposta": "7:1 (texto principal da Camada 3 sobre o fundo do card), acima do mínimo AA de 4.5:1.",
+        "confianca": "alta",
+        "evidencias": [
+          {
+            "caminho": "docs/specs/pages/apresentação/especificacao-ux-mauricio-issei.md",
+            "linhas": "27",
+            "trecho": "* **Camada 3 (Núcleo):** o dark mode dominante das Camadas 1 e 2 é preservado — o fundo permanece grafite escuro. A sensação de \"mesa de trabalho iluminada\" é criada apenas por iluminação localizada: contornos de cards, bordas finas e fundos internos em um grafite ligeiramente mais claro que o base. Isso mantém legibilidade e conforto visual sem romper a coerência tonal da página. **Critério mínimo obrigatório:** mesmo com fundo escuro, o texto principal da Camada 3 deve manter contraste de pelo menos 7:1 em relação ao fundo do card (grafite claro + texto branco quase puro) — o padrão exigido para densidade técnica prolongada, não o mínimo aceitável de WCAG AA. Validar em monitores com calibragem mediana, não apenas em telas de referência.",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "docs/specs/pages/apresentação/especificacao-ux-mauricio-issei.md",
+            "linhas": "207",
+            "trecho": "11. *(v3.0)* Contraste mínimo de 7:1 definido explicitamente para texto da Camada 3.",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "AGENTS.md",
+            "linhas": "121",
+            "trecho": "e um piso de contraste de **7:1** na Camada 3. **É a única exceção à paleta Dark Tech.**",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "Os testes também medem as Camadas 1 e 2 contra 7:1 (tests/apresentacao.tokens.test.mjs:44). O token atual dá 17.11:1 segundo o comentário em src/apresentacao.css:33 (afirmado, não recalculado)."
+      },
+      "tipo_concorda": true,
+      "evidencia_concorda": true,
+      "p3": {
+        "veredito": "defeito",
+        "defeitos": [
+          {
+            "tipo": "evidencia_errada",
+            "gravidade": "media",
+            "descricao": "A fonte relevante ADR-ap-001 linhas 25-28 nao contem o piso de 7:1 nem 'Camada 3'; essas linhas tratam do namespace .ap-* e da excecao nomeada. O piso aparece na tabela de contrastes, linha 46. Fonte com linha errada pune/mal-credita o recall.",
+            "prova": {
+              "caminho": "docs/specs/pages/apresentação/ADR-ap-001-namespace-e-excecao-dark-tech.md",
+              "linhas": "46",
+              "trecho": "| `#FAFAFA` sobre `#17171C` (texto L3 em card) | **17.11:1** | 7 | ok — evolução 11 |"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          },
+          {
+            "tipo": "vazamento_lexical",
+            "gravidade": "baixa",
+            "descricao": "A pergunta ('piso de contraste', 'Camada 3', 'apresentacao') repete quase literalmente o trecho esperado 'e um piso de contraste de **7:1** na Camada 3'. Caso rotulado spec_fact e na pratica lexical.",
+            "prova": {
+              "caminho": "AGENTS.md",
+              "linhas": "121",
+              "trecho": "e um piso de contraste de **7:1** na Camada 3. **É a única exceção à paleta Dark Tech.**"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          }
+        ]
+      },
+      "vazamento_lexical": {
+        "palavras": [
+          "camada",
+          "contraste",
+          "piso"
+        ],
+        "vazamento": true
+      },
+      "concordante": true,
+      "motivos_divergencia": []
+    },
+    {
+      "id": "GS-SPEC-002",
+      "classe": "spec_fact",
+      "pergunta": "Por que os fluxos da página engenharia-agentes-ia não usam bpmn-js, e quando isso pode mudar?",
+      "outcome_esperado": "answered",
+      "p2": {
+        "tipo": "resposta",
+        "resposta": "O ADR-eai-002 (Aceito, 2026-06-17) troca o bpmn-js por SVG/CSS próprio. Motivos: bpmn-js é pesado (~centenas de KB) e traz DOM/canvas próprio, com pouco controle de acessibilidade e tema; o SVG mantém o bundle enxuto, o tema Dark Tech e o controle de teclado e equivalentes textuais. Pode mudar na V2 (WU-13), só se a edição real de diagramas pelo usuário justificar o peso, e então com um novo ADR.",
+        "confianca": "alta",
+        "evidencias": [
+          {
+            "caminho": "docs/decisions/ADR-eai-002-fluxos-em-svg-sem-bpmnjs.md",
+            "linhas": "10-11",
+            "trecho": "determinístico, Saga, DLQ e roteamento por confiança. `bpmn-js` é uma dependência pesada (~centenas de KB) e traz seu próprio DOM/canvas, com controle limitado de acessibilidade e de tema.",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "docs/decisions/ADR-eai-002-fluxos-em-svg-sem-bpmnjs.md",
+            "linhas": "21-22",
+            "trecho": "`bpmn-js` **editável** fica **diferido para a V2** (WU-13), e só entra se a edição real de diagramas pelo usuário justificar o peso — então com novo ADR.",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": ".ai/state/PROGRESS.md",
+            "linhas": "52",
+            "trecho": "**🎉 Onda V2 COMPLETA** (WU-12, WU-14). WU-13 (bpmn-js editável) **diferido** por ADR-eai-002.",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": ".ai/state/PROGRESS.md",
+            "linhas": "65",
+            "trecho": "Único item diferido: WU-13 (bpmn-js editável, ADR-eai-002).",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "Observação: o PROGRESS.md dá a Onda V2 como COMPLETA e mantém a WU-13 diferida. A 'janela' da V2 prevista no ADR passou sem o bpmn-js; o gatilho que resta é a necessidade de edição real mais um novo ADR."
+      },
+      "tipo_concorda": true,
+      "evidencia_concorda": true,
+      "p3": {
+        "veredito": "sem_defeito",
+        "defeitos": []
+      },
+      "vazamento_lexical": {
+        "palavras": [
+          "bpmn",
+          "fluxos"
+        ],
+        "vazamento": false
+      },
+      "concordante": true,
+      "motivos_divergencia": []
+    },
+    {
+      "id": "GS-SPEC-003",
+      "classe": "spec_fact",
+      "pergunta": "Qual SLO de latência de recuperação a página do Knowledge OS declara?",
+      "outcome_esperado": "answered",
+      "p2": {
+        "tipo": "resposta",
+        "resposta": "P95 de retrieval < 800ms (KPI 'Retrieval Latency P95', SLO sugerido < 800ms).",
+        "confianca": "alta",
+        "evidencias": [
+          {
+            "caminho": "src/knowledge-os-presentation.html",
+            "linhas": "1015",
+            "trecho": "<li>SLOs por domínio: P95 retrieval &lt; 800ms; freshness &lt; 24h.</li>",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "src/knowledge-os-presentation.html",
+            "linhas": "2133",
+            "trecho": "<tr><td>Retrieval Latency P95</td><td>Tempo de resposta da camada de retrieval.</td><td>&lt; 800ms</td></tr>",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "src/knowledge-os-presentation.html",
+            "linhas": "1991",
+            "trecho": "<td>P95 retrieval &lt; 800ms</td>",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "É um SLO 'sugerido', isto é, uma meta e não uma medição. Não confundir com 'p99 < 200ms' (linhas 1553 e 1836), que é um exemplo de constraint CON-003 numa spec ilustrativa, e não o SLO de recuperação. O gêmeo public/knowledge-os-presentation.md não menciona SLO."
+      },
+      "tipo_concorda": true,
+      "evidencia_concorda": true,
+      "p3": {
+        "veredito": "defeito",
+        "defeitos": [
+          {
+            "tipo": "evidencia_incompleta",
+            "gravidade": "media",
+            "descricao": "A tabela de KPIs da mesma pagina traz a linha 'Retrieval Latency P95 < 800ms' sob o cabecalho 'SLO sugerido' (linha 2133), evidencia tao boa quanto 1015 e a mais explicita como SLO de latencia de recuperacao. Esta fora de fontes_relevantes e de evidencia_esperada (so 1015 e 1991).",
+            "prova": {
+              "caminho": "src/knowledge-os-presentation.html",
+              "linhas": "2133",
+              "trecho": "<tr><td>Retrieval Latency P95</td><td>Tempo de resposta da camada de retrieval.</td><td>&lt; 800ms</td></tr>"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          }
+        ]
+      },
+      "vazamento_lexical": {
+        "palavras": [],
+        "vazamento": false
+      },
+      "concordante": true,
+      "motivos_divergencia": []
+    },
+    {
+      "id": "GS-CODE-001",
+      "classe": "code",
+      "pergunta": "O que acontece quando um hexadecimal é escrito em src/apresentacao.html?",
+      "outcome_esperado": "answered",
+      "p2": {
+        "tipo": "resposta",
+        "resposta": "O hook PostToolUse (matcher Write|Edit) roda scripts/guard-ap-tokens.mjs. Se achar um hexadecimal (#rgb/#rrggbb) fora de comentários e de linhas com %23, sai com código 2 e devolve ao Claude a mensagem '[guard-ap] Hexadecimal proibido' com as linhas infratoras. O teste Playwright 'evolução 13' também reprova qualquer #rrggbb no body.",
+        "confianca": "media",
+        "evidencias": [
+          {
+            "caminho": "scripts/guard-ap-tokens.mjs",
+            "linhas": "6-10",
+            "trecho": "* do agente: aqui ela é aplicada mecanicamente. Qualquer hexadecimal escrito em * src/apresentacao.html ou src/js/apresentacao/** bloqueia a ferramenta. * * Sai 2 (bloqueia e devolve a mensagem ao Claude) quando encontra violação. * Configurado em .claude/settings.json (matcher Write|Edit).",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "scripts/guard-ap-tokens.mjs",
+            "linhas": "51-58",
+            "trecho": "if (offenders.length) { console.error( `[guard-ap] Hexadecimal proibido em ${filePath}\\n` + offenders.join('\\n') + `\\n\\nToda cor da página v3.0 vive em src/apresentacao.css como var(--ap-*).\\n` + `Ver docs/specs/pages/apresentação/ADR-ap-001-namespace-e-excecao-dark-tech.md` ); process.exit(2);",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": ".claude/settings.json",
+            "linhas": "25-31",
+            "trecho": "\"PostToolUse\": [ { \"matcher\": \"Write|Edit\", \"hooks\": [ { \"type\": \"command\", \"command\": \"node scripts/guard-ap-tokens.mjs\"",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "tests/apresentacao.spec.js",
+            "linhas": "270-276",
+            "trecho": "// Lido do DOM, não por fatiamento de string: `indexOf('<body')` casa também // com a palavra dentro de comentários no <head>. const body = await page.evaluate(() => document.body.outerHTML); const hits = [...body.matchAll(/#[0-9a-fA-F]{6}\\b/g)].map((m) => m[0]); expect(hits, `cores fora de src/apresentacao.css: ${hits.join(', ')}`).toEqual([]); }); ",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "Ressalvas verificadas: (1) por ser PostToolUse, o arquivo já foi gravado quando o hook roda; ele não desfaz a escrita, só sinaliza ao agente. (2) AGENTS.md:125-126 diz que tests/apresentacao.tokens.test.mjs também aplica a regra, mas esse teste só lê src/apresentacao.css (linha 18) e não varre o HTML. Quem cobre o HTML é tests/apresentacao.spec.js. (3) src/apresentacao.html:53 já contém '#0A0A0C' no meta theme-color, que o hook acusaria em qualquer edição do arquivo; o teste Playwright só olha o body."
+      },
+      "tipo_concorda": true,
+      "evidencia_concorda": true,
+      "p3": {
+        "veredito": "defeito",
+        "defeitos": [
+          {
+            "tipo": "evidencia_incompleta",
+            "gravidade": "media",
+            "descricao": "O ADR-ap-001 resume exatamente a resposta (hook PostToolUse bloqueia a escrita de hexadecimal; teste de tokens reprova o build) e cita tests/apresentacao.tokens.test.mjs como segundo mecanismo. Nem o ADR linha 74 nem o teste constam em fontes_relevantes; um sistema que cite o ADR e punido.",
+            "prova": {
+              "caminho": "docs/specs/pages/apresentação/ADR-ap-001-namespace-e-excecao-dark-tech.md",
+              "linhas": "74",
+              "trecho": "`scripts/guard-ap-tokens.mjs` (hook `PostToolUse`) bloqueia a escrita de qualquer hexadecimal em `src/apresentacao.html` e `src/js/apresentacao/**`, e `tests/apresentacao.tokens.test.mjs` reprova o build se um par de contraste regredir."
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          },
+          {
+            "tipo": "evidencia_errada",
+            "gravidade": "baixa",
+            "descricao": "fonte AGENTS.md linhas 124-125: a linha 124 e 'Todo seletor e custom property usa o prefixo ap-', irrelevante; a regra do hexadecimal comeca na 125.",
+            "prova": {
+              "caminho": "AGENTS.md",
+              "linhas": "124-125",
+              "trecho": "- Todo seletor e custom property usa o prefixo `ap-`, para impedir vazamento.\n- **Nenhum hexadecimal** pode ser escrito fora de `src/apresentacao.css`"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          }
+        ]
+      },
+      "vazamento_lexical": {
+        "palavras": [],
+        "vazamento": false
+      },
+      "concordante": true,
+      "motivos_divergencia": []
+    },
+    {
+      "id": "GS-CODE-002",
+      "classe": "code",
+      "pergunta": "Onde é montado o bloco PF:START da home e qual função o grava no HTML?",
+      "outcome_esperado": "answered",
+      "p2": {
+        "tipo": "resposta",
+        "resposta": "Em scripts/gen-portfolio.mjs: a constante pfBlock (template string, linhas 386-402) monta o bloco a partir de public/cv.json. A função fill() (linhas 580-590) troca o trecho entre '<!-- PF:START' e '<!-- PF:END -->' de src/index.html; depois writeFileSync (linha 608) grava os alvos dessincronizados.",
+        "confianca": "alta",
+        "evidencias": [
+          {
+            "caminho": "scripts/gen-portfolio.mjs",
+            "linhas": "386",
+            "trecho": "const pfBlock = `<!-- PF:START — gerado por scripts/gen-portfolio.mjs a partir de public/cv.json (NÃO editar à mão) -->",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "scripts/gen-portfolio.mjs",
+            "linhas": "580",
+            "trecho": "function fill(file, blocks) {",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "scripts/gen-portfolio.mjs",
+            "linhas": "593",
+            "trecho": "fill('src/index.html', [['<!-- PF:START', '<!-- PF:END -->', pfBlock]]),",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "scripts/gen-portfolio.mjs",
+            "linhas": "608",
+            "trecho": "for (const t of stale) writeFileSync(t.path, t.next);",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "No src/index.html o bloco vai da linha 676 à 1569. Com --check, o script não grava nada e só falha se houver dessincronia (linha 607)."
+      },
+      "tipo_concorda": true,
+      "evidencia_concorda": true,
+      "p3": {
+        "veredito": "defeito",
+        "defeitos": [
+          {
+            "tipo": "resposta_errada",
+            "gravidade": "alta",
+            "descricao": "A afirmacao obrigatoria diz que a funcao 'fill' grava o bloco no HTML. fill() so substitui o bloco em memoria e devolve {path,file,prev,next}; quem grava em disco e o writeFileSync no laco do nivel superior (linha 608), que nao e funcao. Resposta correta: pfBlock monta o bloco, fill injeta em memoria e writeFileSync grava.",
+            "prova": {
+              "caminho": "scripts/gen-portfolio.mjs",
+              "linhas": "608",
+              "trecho": "for (const t of stale) writeFileSync(t.path, t.next);"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          },
+          {
+            "tipo": "vazamento_lexical",
+            "gravidade": "baixa",
+            "descricao": "A pergunta contem 'PF:START', token literal que aparece em pfBlock (linha 386) e na chamada de fill (593); busca lexical acha direto. Classe code, mas o ancoramento e lexical.",
+            "prova": {
+              "caminho": "scripts/gen-portfolio.mjs",
+              "linhas": "386",
+              "trecho": "const pfBlock = `<!-- PF:START"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          }
+        ]
+      },
+      "vazamento_lexical": {
+        "palavras": [
+          "start"
+        ],
+        "vazamento": false
+      },
+      "concordante": false,
+      "motivos_divergencia": [
+        "P3 defeito alto (resposta_errada)"
+      ]
+    },
+    {
+      "id": "GS-CODE-003",
+      "classe": "code",
+      "pergunta": "Qual teste verifica o contraste mínimo de 7:1 na Camada 3 da apresentação?",
+      "outcome_esperado": "answered",
+      "p2": {
+        "tipo": "resposta",
+        "resposta": "Dois testes. tests/apresentacao.tokens.test.mjs, 'INV-AP-02 · contraste do texto da Camada 3 ≥ 7:1 (evolução 11)', calcula --ap-l3-text sobre --ap-l3-card a partir do CSS. tests/apresentacao.spec.js, 'evolução 11 · texto da Camada 3 em contraste mínimo de 7:1', roda o axe AAA (color-contrast-enhanced) em [data-layer=\"3\"] via helper tests/_helpers/axe-aaa.js.",
+        "confianca": "alta",
+        "evidencias": [
+          {
+            "caminho": "tests/apresentacao.tokens.test.mjs",
+            "linhas": "39-41",
+            "trecho": "test('INV-AP-02 · contraste do texto da Camada 3 ≥ 7:1 (evolução 11)', () => { const r = contrastRatio(hex('--ap-l3-text'), hex('--ap-l3-card')); assert.ok(r >= 7, `texto L3 sobre card: ${r.toFixed(2)}:1 — exigido ≥ 7:1`);",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "tests/apresentacao.spec.js",
+            "linhas": "262-265",
+            "trecho": "test('evolução 11 · texto da Camada 3 em contraste mínimo de 7:1', async ({ page }) => { await settleReveal(page); await expectEnhancedContrast(page, '[data-layer=\"3\"]'); });",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "tests/_helpers/axe-aaa.js",
+            "linhas": "2",
+            "trecho": "* Contraste realçado (WCAG AAA, 7:1) — exigência da Camada 3 da página v3.0",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "O ADR-ap-001:74 cita só o tokens.test.mjs como guarda de contraste."
+      },
+      "tipo_concorda": true,
+      "evidencia_concorda": true,
+      "p3": {
+        "veredito": "defeito",
+        "defeitos": [
+          {
+            "tipo": "evidencia_incompleta",
+            "gravidade": "alta",
+            "descricao": "Existe outro teste que verifica exatamente o enunciado, com o titulo quase identico a pergunta ('Camada 3', 'contraste minimo de 7:1'): o teste Playwright evolucao 11. Esta ausente de fontes e evidencia; um sistema que cite tests/apresentacao.spec.js e punido, e a afirmacao obrigatoria 'INV-AP-02' exclui essa resposta valida. O proprio arquivo de tokens tem ainda um segundo teste INV-AP-02 (Camadas 1 e 2, linha 44).",
+            "prova": {
+              "caminho": "tests/apresentacao.spec.js",
+              "linhas": "262",
+              "trecho": "test('evolução 11 · texto da Camada 3 em contraste mínimo de 7:1', async ({ page }) => {"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          },
+          {
+            "tipo": "pergunta_ambigua",
+            "gravidade": "media",
+            "descricao": "'Qual teste' admite duas respostas corretas (teste unitario de tokens e teste e2e Playwright), com ids e arquivos diferentes.",
+            "prova": {
+              "caminho": "tests/apresentacao.tokens.test.mjs",
+              "linhas": "39",
+              "trecho": "test('INV-AP-02 · contraste do texto da Camada 3 ≥ 7:1 (evolução 11)'"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          },
+          {
+            "tipo": "vazamento_lexical",
+            "gravidade": "media",
+            "descricao": "A pergunta ('contraste', '7:1', 'Camada 3', 'apresentacao') repete o titulo do teste esperado; classe code mas e lexical.",
+            "prova": {
+              "caminho": "tests/apresentacao.tokens.test.mjs",
+              "linhas": "39",
+              "trecho": "contraste do texto da Camada 3 ≥ 7:1"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          }
+        ]
+      },
+      "vazamento_lexical": {
+        "palavras": [
+          "camada",
+          "contraste"
+        ],
+        "vazamento": false
+      },
+      "concordante": false,
+      "motivos_divergencia": [
+        "P3 defeito alto (evidencia_incompleta)"
+      ]
+    },
+    {
+      "id": "GS-CONF-001",
+      "classe": "conflict",
+      "pergunta": "O projeto usa Vite ou é sem build step?",
+      "outcome_esperado": "answered_with_conflict",
+      "p2": {
+        "tipo": "resposta",
+        "resposta": "O site usa Vite (6), com scripts dev/build no package.json. O ADR-001 'Sem build step' vale só para o subprojeto LifeOS (public/lifeos.html, em public/, que não passa pelo Vite) e não para o site.",
+        "confianca": "alta",
+        "evidencias": [
+          {
+            "caminho": "package.json",
+            "linhas": "9",
+            "trecho": "\"build\": \"vite build\",",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "AGENTS.md",
+            "linhas": "11",
+            "trecho": "- **Tech Stack**: Vite 6, Tailwind CSS v4 (native imports), Vanilla JS (ES6 Modules).",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "docs/specs/14-adr/ADR-001-sem-build.md",
+            "linhas": "3",
+            "trecho": "titulo: Sem build step — ES Modules + import maps + CDN",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "docs/specs/000-INDEX.md",
+            "linhas": "3",
+            "trecho": "titulo: Índice Mestre — LifeOS / Terminal Evolutivo",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "public/lifeos.html",
+            "linhas": "10",
+            "trecho": "RG-06 baseline não previa 'unsafe-inline' em script-src; ADR-001 (sem build)",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "Conflito aparente, resolvido pelo escopo: a árvore docs/specs/000-INDEX.md é o 'Índice Mestre — LifeOS / Terminal Evolutivo' e registra o ADR-001 (sem build) para esse jogo. O ADR rejeita Vite para o LifeOS (ADR-001:24). Quem ler docs/specs/ sem ver o escopo pode concluir errado."
+      },
+      "tipo_concorda": false,
+      "evidencia_concorda": true,
+      "p3": {
+        "veredito": "defeito",
+        "defeitos": [
+          {
+            "tipo": "pergunta_ambigua",
+            "gravidade": "media",
+            "descricao": "'O projeto' pode ser o site (Vite 6) ou o subprojeto LifeOS/life3d (sem build). O proprio ADR-001 diz 'O projeto vive num site pessoal estatico', o que sem o INDEX leria-se como o site inteiro; as duas leituras dao respostas diferentes e o 'conflito' depende de escopo que o ADR nao declara.",
+            "prova": {
+              "caminho": "docs/specs/14-adr/ADR-001-sem-build.md",
+              "linhas": "11-14",
+              "trecho": "O projeto vive num site pessoal estático (mauricio.issei.com.br) mantido por\numa pessoa."
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          },
+          {
+            "tipo": "evidencia_incompleta",
+            "gravidade": "media",
+            "descricao": "A afirmacao mais direta de que o site usa Vite (Tech Stack) em AGENTS.md linha 11 nao esta listada, nem README. So ficam package.json, ARCHITECTURE 395 (rel 1).",
+            "prova": {
+              "caminho": "AGENTS.md",
+              "linhas": "11",
+              "trecho": "- **Tech Stack**: Vite 6, Tailwind CSS v4 (native imports), Vanilla JS (ES6 Modules)."
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          }
+        ]
+      },
+      "vazamento_lexical": {
+        "palavras": [
+          "vite"
+        ],
+        "vazamento": false
+      },
+      "concordante": false,
+      "motivos_divergencia": [
+        "tipo: golden=answered_with_conflict, P2=resposta"
+      ]
+    },
+    {
+      "id": "GS-CONF-002",
+      "classe": "conflict",
+      "pergunta": "Quantos KPIs cognitivos o Knowledge OS define?",
+      "outcome_esperado": "answered_with_conflict",
+      "p2": {
+        "tipo": "conflito",
+        "resposta": "A própria página se contradiz. Ela diz '18 KPIs cognitivos (+ FinOps)' em 4 camadas, mas também '22 KPIs cognitivos' em 5 camadas. Contei a tabela da §7: 22 linhas em 5 camadas (Substrate 4, Retrieval 5, Reasoning 5, Outcome 4, FinOps 4). Ou seja, 18 cognitivos mais 4 de FinOps somam 22.",
+        "confianca": "alta",
+        "evidencias": [
+          {
+            "caminho": "src/knowledge-os-presentation.html",
+            "linhas": "690",
+            "trecho": "<div class=\"kpi-card\"><div class=\"kpi-value\">18</div><div class=\"kpi-label\">KPIs cognitivos + FinOps</div></div>",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "src/knowledge-os-presentation.html",
+            "linhas": "1014",
+            "trecho": "<li>18 KPIs cognitivos divididos em 4 camadas (§7).</li>",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "src/knowledge-os-presentation.html",
+            "linhas": "710",
+            "trecho": "<li><span class=\"ed-mode\">Verificar</span> <a href=\"#diagnostico\">10 dimensões da revisão crítica</a>, <a href=\"#seguranca\">Limites da IA</a> e <a href=\"#observabilidade\">22 KPIs cognitivos</a>: cada gap da proposta original com sua contramedida, os Circuit Breakers e como medir.</li>",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "src/knowledge-os-presentation.html",
+            "linhas": "2109",
+            "trecho": "<h2 class=\"text-3xl md:text-4xl font-bold text-white section-title\">22 KPIs cognitivos em 5 camadas</h2>",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "Contagem feita nas linhas <tr> do tbody (src/knowledge-os-presentation.html:2122-2152). O '18' trata FinOps à parte e o '22' conta FinOps como camada de KPI cognitivo. O roadmap ainda cita '5 KPIs cognitivos baseline' na Fase 1 (linha 2203)."
+      },
+      "tipo_concorda": true,
+      "evidencia_concorda": true,
+      "p3": {
+        "veredito": "defeito",
+        "defeitos": [
+          {
+            "tipo": "classe_errada",
+            "gravidade": "alta",
+            "descricao": "Nao e conflito real: 18 KPIs cognitivos (4 camadas) + 4 KPIs da camada FinOps = 22 em 5 camadas. A tabela tem Substrate 4, Retrieval 5, Reasoning 5, Outcome 4 (=18) e FinOps 4. A linha 690 ja diz '18 KPIs cognitivos + FinOps'. A resposta esperada exige relatar divergencia e proibe 'um unico numero', penalizando a resposta correta que reconcilia (22 total, 18 sem FinOps).",
+            "prova": {
+              "caminho": "src/knowledge-os-presentation.html",
+              "linhas": "690",
+              "trecho": "<div class=\"kpi-value\">18</div><div class=\"kpi-label\">KPIs cognitivos + FinOps</div>"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          },
+          {
+            "tipo": "evidencia_incompleta",
+            "gravidade": "baixa",
+            "descricao": "Linha 710 tambem diz 22 KPIs cognitivos e nao esta listada.",
+            "prova": {
+              "caminho": "src/knowledge-os-presentation.html",
+              "linhas": "710",
+              "trecho": "<a href=\"#observabilidade\">22 KPIs cognitivos</a>"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          }
+        ]
+      },
+      "vazamento_lexical": {
+        "palavras": [
+          "cognitivos",
+          "kpis"
+        ],
+        "vazamento": false
+      },
+      "concordante": false,
+      "motivos_divergencia": [
+        "P3 defeito alto (classe_errada)"
+      ]
+    },
+    {
+      "id": "GS-CONF-003",
+      "classe": "conflict",
+      "pergunta": "Quantas páginas HTML existem em src/?",
+      "outcome_esperado": "abstained",
+      "p2": {
+        "tipo": "conflito",
+        "resposta": "Verifiquei 46 arquivos em src/*.html (só o nível de topo; 82 contando src/en/, que tem 36). Os documentos dão outros números: AGENTS.md diz 36 e REPORT.md diz 43 páginas PT (e 34 espelhos EN).",
+        "confianca": "alta",
+        "evidencias": [
+          {
+            "caminho": "AGENTS.md",
+            "linhas": "64-65",
+            "trecho": "**Gap: no HTML support.** CodeGraph has no HTML parser, so the 36 `src/*.html` pages — this repo's actual feature units, each with inline",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "REPORT.md",
+            "linhas": "12",
+            "trecho": "- **Funcionalidade/Épico:** retrofit de acessibilidade do site inteiro — 43 páginas PT em `src/*.html` e 34 espelhos EN gerados em `src/en/*.html`. Fases 1–8 em `docs/specs/a11y-first/implementation-plan.md`.",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "Contagem com 'ls src/*.html | wc -l' = 46; 'find src -name *.html' = 82; src/en/*.html = 36. O '36' do AGENTS.md coincide com o total de src/en/*.html, mas não com src/*.html. Os documentos estão defasados em relação ao corpus."
+      },
+      "tipo_concorda": false,
+      "evidencia_concorda": true,
+      "p3": {
+        "veredito": "defeito",
+        "defeitos": [
+          {
+            "tipo": "classe_errada",
+            "gravidade": "media",
+            "descricao": "Rotulado conflict, mas o outcome esperado e abstained e o proprio golden diz que o fato e 46 (verificavel por listagem). E um caso de afirmacao documental defasada, nao um conflito entre fontes (so uma fonte, AGENTS.md). Alem disso afirmacoes_proibidas pune '46 paginas', o valor correto, e a pergunta tem resposta verificavel no corpus (46 arquivos src/*.html).",
+            "prova": {
+              "caminho": "AGENTS.md",
+              "linhas": "64-65",
+              "trecho": "CodeGraph has no HTML parser, so the 36\n`src/*.html` pages — this repo's actual feature units"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          }
+        ]
+      },
+      "vazamento_lexical": {
+        "palavras": [
+          "html"
+        ],
+        "vazamento": false
+      },
+      "concordante": false,
+      "motivos_divergencia": [
+        "tipo: golden=abstained, P2=conflito"
+      ]
+    },
+    {
+      "id": "GS-ABS-001",
+      "classe": "no_answer",
+      "pergunta": "Qual é o RTO e o RPO do site em produção?",
+      "outcome_esperado": "abstained",
+      "p2": {
+        "tipo": "sem_resposta",
+        "resposta": "O corpus não define RTO nem RPO para o site em produção.",
+        "confianca": "alta",
+        "evidencias": [],
+        "nota": "Busquei RTO, RPO, 'recovery time' e 'recovery point' (grep -rIi) em todo o corpus, sem node_modules: zero ocorrências."
+      },
+      "tipo_concorda": true,
+      "evidencia_concorda": null,
+      "p3": {
+        "veredito": "sem_defeito",
+        "defeitos": []
+      },
+      "vazamento_lexical": null,
+      "concordante": true,
+      "motivos_divergencia": []
+    },
+    {
+      "id": "GS-ABS-002",
+      "classe": "no_answer",
+      "pergunta": "Qual foi o Recall@10 medido do Knowledge OS?",
+      "outcome_esperado": "abstained",
+      "p2": {
+        "tipo": "sem_resposta",
+        "resposta": "Não há Recall@10 medido. O corpus só traz metas: um critério de saída da Fase 1 ('Recall@10 > 0.75 em benchmark interno') e um SLO sugerido de Recall@k > 0.85.",
+        "confianca": "alta",
+        "evidencias": [
+          {
+            "caminho": "src/knowledge-os-presentation.html",
+            "linhas": "2210",
+            "trecho": "<li>✓ Recall@10 &gt; 0.75 em benchmark interno</li>",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "src/knowledge-os-presentation.html",
+            "linhas": "2130",
+            "trecho": "<td>Recall@k</td><td>% de docs relevantes nos top-k recuperados.</td><td>&gt; 0.85</td></tr>",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "A única ocorrência de 'Recall@10' no corpus é a linha 2210, um critério de saída do roadmap e não um resultado."
+      },
+      "tipo_concorda": true,
+      "evidencia_concorda": null,
+      "p3": {
+        "veredito": "defeito",
+        "defeitos": [
+          {
+            "tipo": "evidencia_incompleta",
+            "gravidade": "media",
+            "descricao": "A pagina declara tambem meta Recall@k > 0.85 (tabela de KPIs), diferente da 0.75 do criterio de saida. A afirmacao obrigatoria cita so Recall@10 > 0.75, e a fonte 2130 nao esta listada; resposta que mencione as duas metas ficaria com cobertura inconsistente.",
+            "prova": {
+              "caminho": "src/knowledge-os-presentation.html",
+              "linhas": "2130",
+              "trecho": "<td>Recall@k</td><td>% de docs relevantes nos top-k recuperados.</td><td>&gt; 0.85</td></tr>"
+            },
+            "prova_verificada": true,
+            "motivo": ""
+          }
+        ]
+      },
+      "vazamento_lexical": null,
+      "concordante": true,
+      "motivos_divergencia": []
+    },
+    {
+      "id": "GS-ABS-003",
+      "classe": "no_answer",
+      "pergunta": "Qual banco vetorial o Knowledge OS usa em produção?",
+      "outcome_esperado": "abstained",
+      "p2": {
+        "tipo": "sem_resposta",
+        "resposta": "O corpus não nomeia banco vetorial para o Knowledge OS em produção. A página fala só, de forma genérica, em 'Hybrid retrieval: vector + BM25 + graph traversal'.",
+        "confianca": "alta",
+        "evidencias": [
+          {
+            "caminho": "src/knowledge-os-presentation.html",
+            "linhas": "1068",
+            "trecho": "<tr><td><strong class=\"text-white\">Recuperação</strong></td><td>Navegação manual + busca lexical.</td><td>Hybrid retrieval: vector + BM25 + graph traversal.</td><td><span class=\"pill pill-blue\">Precisão 3×</span></td></tr>",
+            "verificada": true,
+            "motivo": ""
+          },
+          {
+            "caminho": "src/knowledge-os-presentation.html",
+            "linhas": "1139",
+            "trecho": "<p class=\"text-gray-400 text-sm mt-1\">Vector search (denso) · BM25 (esparso) · graph traversal · re-ranking · query routing · retrieval policy declarativa.</p>",
+            "verificada": true,
+            "motivo": ""
+          }
+        ],
+        "nota": "Busquei pgvector, qdrant, pinecone, weaviate, milvus, chroma, faiss, opensearch, neo4j, neptune e 'banco vetorial'/'vector store': nenhuma ocorrência ligada ao Knowledge OS. As menções a 'banco vetorial' estão em digital-workplace-agentico e são genéricas. O corpus também não afirma que o Knowledge OS esteja em produção."
+      },
+      "tipo_concorda": true,
+      "evidencia_concorda": null,
+      "p3": {
+        "veredito": "sem_defeito",
+        "defeitos": []
+      },
+      "vazamento_lexical": null,
+      "concordante": true,
+      "motivos_divergencia": []
+    }
+  ],
+  "perguntas_p1": [
+    {
+      "pergunta": "Qual é o comando npm que atualiza as traduções em inglês e depois verifica se estão em dia?",
+      "classe": "lexical",
+      "quem_pergunta": "agente",
+      "motivo": "Um agente que editou uma página em português precisa do comando exato para sincronizar o espelho em inglês antes de terminar a tarefa."
+    },
+    {
+      "pergunta": "Qual é o nível de contraste de acessibilidade que o site precisa atingir? É WCAG AA ou AAA?",
+      "classe": "spec_fact",
+      "quem_pergunta": "dev_novo",
+      "motivo": "Um dev novo que vai mexer nas cores ou nos textos precisa saber qual é a meta de acessibilidade que vale para o projeto."
+    },
+    {
+      "pergunta": "Quando alguém digita um endereço antigo do site, qual função do CloudFront reescreve o caminho?",
+      "classe": "code",
+      "quem_pergunta": "dono",
+      "motivo": "O dono, ao notar que um link antigo não abre, quer saber qual código de redirecionamento está em ação para corrigir ou apagar a regra."
+    },
+    {
+      "pergunta": "Os documentos de acessibilidade concordam sobre quais páginas estão isentas das regras? Se o relatório diz uma coisa e a lista de exceções diz outra, qual vale?",
+      "classe": "conflict",
+      "quem_pergunta": "agente",
+      "motivo": "Um agente que vai corrigir uma página precisa saber se ela está oficialmente isenta, e pode encontrar relatório e lista de exceções em desacordo."
+    },
+    {
+      "pergunta": "Quanto o Maurício paga por mês de hospedagem na AWS?",
+      "classe": "no_answer",
+      "quem_pergunta": "dono",
+      "motivo": "O dono pode imaginar que a documentação de infraestrutura registra custos, mas custo financeiro costuma não estar num repositório de código."
+    },
+    {
+      "pergunta": "Quantas pessoas únicas visitaram o site no mês passado?",
+      "classe": "no_answer",
+      "quem_pergunta": "dono",
+      "motivo": "O dono quer saber o tráfego do portfólio para medir resultado, uma informação que normalmente fica em ferramenta de analytics e não no código."
+    },
+    {
+      "pergunta": "Em que lugares do código o diretório lifeos é usado? Não consigo achar onde ele aparece.",
+      "classe": "lexical",
+      "quem_pergunta": "dev_novo",
+      "motivo": "Um dev novo que encontra uma pasta com nome estranho quer localizar as referências para entender se ela é parte do site ou algo separado."
+    },
+    {
+      "pergunta": "Existe alguma decisão registrada que permita uma página fugir do tema escuro padrão do site?",
+      "classe": "spec_fact",
+      "quem_pergunta": "agente",
+      "motivo": "Um agente que recebe a tarefa de ajustar o visual precisa saber se há exceção documentada antes de trocar cores para o padrão."
+    },
+    {
+      "pergunta": "Como o gerador de SEO monta a meta description de cada página que é publicada?",
+      "classe": "code",
+      "quem_pergunta": "dev_novo",
+      "motivo": "Um dev novo que quer mudar o texto que aparece no Google precisa entender se a descrição vem de um arquivo, de um campo ou de uma regra no script."
+    },
+    {
+      "pergunta": "Antes de criar uma página nova no site, quais documentos eu preciso ler e em que ordem?",
+      "classe": "spec_fact",
+      "quem_pergunta": "dev_novo",
+      "motivo": "Um dev novo que vai criar a primeira página quer seguir o processo documentado, sem pular etapas como a especificação e os testes."
+    }
+  ]
+}
