@@ -9,7 +9,7 @@ Knowledge OS Enterprise: recuperação de conhecimento técnico a partir de docu
 
 ## Estado
 
-Fase 1 em andamento. Pronto: BL-01 (`kos init`), BL-02 (repositórios-fixture para testes), BL-03 (descoberta, `kos discover`), BL-04 (perfis de processamento e chave de fragmento), BL-05 (normalizador e parser Markdown com offsets exatos), BL-06 (JSON, YAML e texto), BL-07 (código como texto, provisório até o Tree-sitter), BL-22 (HTML, texto visível com posições) BL-08 (ingestão full: `kos ingest --full`) e BL-09 (`kos rebuild`, reconstrução determinística a partir do Git).
+Fase 1 em andamento. Pronto: BL-01 (`kos init`), BL-02 (repositórios-fixture para testes), BL-03 (descoberta, `kos discover`), BL-04 (perfis de processamento e chave de fragmento), BL-05 (normalizador e parser Markdown com offsets exatos), BL-06 (JSON, YAML e texto), BL-07 (código como texto, provisório até o Tree-sitter), BL-22 (HTML, texto visível com posições) BL-08 (ingestão full: `kos ingest --full`) BL-09 (`kos rebuild`, reconstrução determinística a partir do Git) e BL-10 (`kos search`, busca presa a uma revisão).
 
 ## Uso
 
@@ -21,6 +21,7 @@ PYTHONPATH=src python -m kos init --json     # saída kos.init.v1
 PYTHONPATH=src python -m kos discover ../mauricio-site --policy policies/mauricio-site.json
 PYTHONPATH=src python -m kos ingest ../mauricio-site --full --policy policies/mauricio-site.json
 PYTHONPATH=src python -m kos rebuild --repo mauricio-site=../mauricio-site --policy policies/mauricio-site.json
+PYTHONPATH=src python -m kos search "piso de contraste da Camada 3" -k 5
 ```
 
 Políticas de elegibilidade ficam em `policies/` (a do corpus-alvo é `policies/mauricio-site.json`); sem `--policy`, vale a política empacotada em `src/kos/discovery/default_policy.json`.
