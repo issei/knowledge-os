@@ -9,7 +9,7 @@ Knowledge OS Enterprise: recuperação de conhecimento técnico a partir de docu
 
 ## Estado
 
-Fase 1 em andamento. Pronto: BL-01 (`kos init`), BL-02 (repositórios-fixture para testes), BL-03 (descoberta, `kos discover`), BL-04 (perfis de processamento e chave de fragmento), BL-05 (normalizador e parser Markdown com offsets exatos), BL-06 (JSON, YAML e texto), BL-07 (código como texto, provisório até o Tree-sitter), BL-22 (HTML, texto visível com posições) BL-08 (ingestão full: `kos ingest --full`) BL-09 (`kos rebuild`, reconstrução determinística a partir do Git) BL-10 (`kos search`, busca presa a uma revisão) e BL-11 (`kos cite`, citação com releitura do blob e estado de verificação).
+Fase 1 em andamento. Pronto: BL-01 (`kos init`), BL-02 (repositórios-fixture para testes), BL-03 (descoberta, `kos discover`), BL-04 (perfis de processamento e chave de fragmento), BL-05 (normalizador e parser Markdown com offsets exatos), BL-06 (JSON, YAML e texto), BL-07 (código como texto, provisório até o Tree-sitter), BL-22 (HTML, texto visível com posições) BL-08 (ingestão full: `kos ingest --full`) BL-09 (`kos rebuild`, reconstrução determinística a partir do Git) BL-10 (`kos search`, busca presa a uma revisão) BL-11 (`kos cite`, citação com releitura do blob e estado de verificação) e BL-12 (auditoria de consultas e citações em `audit.sqlite`, `kos audit verify`).
 
 ## Uso
 
@@ -23,6 +23,7 @@ PYTHONPATH=src python -m kos ingest ../mauricio-site --full --policy policies/ma
 PYTHONPATH=src python -m kos rebuild --repo mauricio-site=../mauricio-site --policy policies/mauricio-site.json
 PYTHONPATH=src python -m kos search "piso de contraste da Camada 3" -k 5
 PYTHONPATH=src python -m kos cite <fragment_key> --lines 121-121   # chave vinda do search --json
+PYTHONPATH=src python -m kos audit verify <query_id> --repo mauricio-site=../mauricio-site
 ```
 
 Políticas de elegibilidade ficam em `policies/` (a do corpus-alvo é `policies/mauricio-site.json`); sem `--policy`, vale a política empacotada em `src/kos/discovery/default_policy.json`.

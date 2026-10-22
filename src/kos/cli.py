@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 from kos import __version__
-from kos import cite, discovery, ingest, rebuild, search
+from kos import audit, cite, discovery, ingest, rebuild
 from kos.errors import EXIT_EXECUTION, EXIT_OK, EXIT_PARTIAL, EXIT_USAGE, KosError
 from kos.store import schema
 
@@ -97,6 +97,17 @@ def build_parser() -> argparse.ArgumentParser:
                      help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
     cit.add_argument("--json", action="store_true", help="saída JSON kos.cite.v1")
     cit.set_defaults(handler=_cmd_cite)
+
+    aud = sub.add_parser("audit", help="consulta a auditoria (CTR-10)")
+    aud_sub = aud.add_subparsers(dest="audit_command", required=True, parser_class=_Parser)
+    ver = aud_sub.add_parser("verify", help="reconfere as citações auditadas de uma consulta, sem o índice")
+    ver.add_argument("query_id", help="id da consulta, como o de `kos search --json`")
+    ver.add_argument("--repo", action="append", required=True, metavar="NOME=CAMINHO",
+                     help="repositório e o caminho do clone local (repetível)")
+    ver.add_argument("--home", default=os.environ.get("KOS_HOME", DEFAULT_HOME),
+                     help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
+    ver.add_argument("--json", action="store_true", help="saída JSON kos.audit.verify.v1")
+    ver.set_defaults(handler=_cmd_audit_verify)
     return parser
 
 
@@ -199,11 +210,12 @@ def _cmd_rebuild(args: argparse.Namespace) -> int:
 
 
 def _cmd_search(args: argparse.Namespace) -> int:
-    result = search.search(Path(args.home), args.query, repo=args.repo, commit=args.rev, k=args.k,
-                           path_glob=args.path, kinds=args.kind, include_generated=args.include_generated)
+    query_id, result = audit.audited_search(
+        Path(args.home), args.query, interface="cli", repo=args.repo, commit=args.rev, k=args.k,
+        path_glob=args.path, kinds=args.kind, include_generated=args.include_generated)
     if args.json:
         print(json.dumps({
-            "schema": "kos.search.v1", "revisions": result.revisions,
+            "schema": "kos.search.v1", "query_id": query_id, "revisions": result.revisions,
             "results": [h.to_json() for h in result.results], "diagnostics": result.diagnostics,
         }, ensure_ascii=False, indent=2))
     else:
@@ -214,7 +226,8 @@ def _cmd_search(args: argparse.Namespace) -> int:
             print("     " + h.snippet.replace("\n", " "))
         revs = ", ".join(f"{r['repo']}@{r['commit_oid'][:12]}" for r in result.revisions)
         d = result.diagnostics
-        print(f"{d['total_hits']} resultado(s) em {revs}; {d['latency_ms']} ms", file=sys.stderr)
+        print(f"{d['total_hits']} resultado(s) em {revs}; {d['latency_ms']} ms; consulta {query_id}",
+              file=sys.stderr)
     return EXIT_OK
 
 
@@ -232,6 +245,22 @@ def _cmd_cite(args: argparse.Namespace) -> int:
                          ensure_ascii=False, indent=2))
     else:
         print("\n".join(c.human() for c in citations))
+    return EXIT_OK
+
+
+def _cmd_audit_verify(args: argparse.Namespace) -> int:
+    repos = {k: Path(v) for k, v in (_split_arg(item, "=", "--repo") for item in args.repo)}
+    checks = audit.reverify(Path(args.home), args.query_id, repos)
+    if args.json:
+        print(json.dumps({"schema": "kos.audit.verify.v1", "query_id": args.query_id,
+                          "citations": [c.to_json() for c in checks]}, ensure_ascii=False, indent=2))
+    else:
+        for c in checks:
+            label = cite.HUMAN_LABEL.get(c.verification, c.verification)
+            note = f"; {c.note}" if c.note else ""
+            print(f"[{c.citation_no}] {c.repo_name}:{c.path_text} @{c.commit_oid[:12]}: {label}"
+                  f" (gravada como {c.recorded}){note}")
+        print(f"{len(checks)} citação(ões) reconferida(s)", file=sys.stderr)
     return EXIT_OK
 
 

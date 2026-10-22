@@ -64,6 +64,12 @@ def initialize(home: Path) -> list[DatabaseStatus]:
     return [_initialize_one(home, *db) for db in DATABASES]
 
 
+def initialize_audit(home: Path) -> DatabaseStatus:
+    """Cria (ou reconhece) só o audit.sqlite: consultar não pode criar um índice vazio."""
+    _ensure_writable_dir(home)
+    return _initialize_one(home, *DATABASES[1])
+
+
 def _ensure_writable_dir(home: Path) -> None:
     try:
         home.mkdir(parents=True, exist_ok=True)

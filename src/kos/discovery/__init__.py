@@ -18,7 +18,7 @@ from kos.discovery.glob import matches
 from kos.discovery.policy import Policy
 from kos.errors import KosError
 
-__all__ = ["DiscoveredFile", "Policy", "discover", "read_blobs", "resolve_commit"]
+__all__ = ["DiscoveredFile", "Policy", "discover", "media_type_for", "read_blobs", "resolve_commit"]
 
 LFS_PREFIX = b"version https://git-lfs.github.com/spec/v1"
 BINARY_SNIFF_BYTES = 8000
@@ -89,7 +89,8 @@ def _decode_path(raw: bytes) -> tuple[str, bool]:
         return raw.decode("utf-8", errors="replace"), False
 
 
-def _media_type(path_text: str) -> str:
+def media_type_for(path_text: str) -> str:
+    """Tipo de mídia pela extensão; o mesmo da ingestão, usado também pela auditoria."""
     return MEDIA_TYPES.get(posixpath.splitext(path_text)[1].lower(), "application/octet-stream")
 
 
@@ -161,7 +162,7 @@ def discover(repo: Path, rev: str, policy: Policy) -> tuple[str, list[Discovered
         rule = _exclusion_rule(text, mode, oid, size, policy, heads)
         files.append(DiscoveredFile(
             path_bytes=path, path_text=text, path_is_utf8=is_utf8, blob_oid=oid,
-            file_mode=mode, byte_size=size, media_type=_media_type(text),
+            file_mode=mode, byte_size=size, media_type=media_type_for(text),
             eligibility="excluded" if rule else "eligible", exclusion_rule=rule,
             artifact_kind=kind, kind_rule=kind_rule, is_generated=generated,
         ))
