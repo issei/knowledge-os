@@ -170,6 +170,8 @@ Verification = verified_exact | verified_normalized | derived | unverified
 5. Resultado vazio é um resultado válido (`results=[]`), não um erro.
 6. Arquivos gerados ficam fora por padrão; quando incluídos, vêm marcados.
 
+**Implementação (BL-10).** `kos search "texto" [--repo] [--rev COMMIT] [-k] [--path GLOB] [--kind K] [--include-generated] [--json]` (`kos.search.v1`). Sem `--rev`, a revisão de cada repositório é a alvo da última ingestão `succeeded`/`partial` (ainda não há "branch configurada"). Cada palavra da consulta vira um termo entre aspas, e os termos são ligados por `OR`; palavras ASCII compostas (`genPortfolio`, `pf_block`) entram também divididas. Pesos de `bm25` (text, heading_path, ident_terms) = (1.0, 2.0, 1.0), declarados sem calibração. Só contam fragmentos dos perfis ativos da instalação; versões elegíveis sem processamento por eles aparecem em `diagnostics.stale_versions` (pedem nova ingestão). O filtro `language[]` fica para o BL-15, quando houver linguagem por símbolo.
+
 **Falhas esperadas:** `E_NO_INDEXED_REVISION`, `E_REVISION_NOT_INDEXED`, `E_QUERY_EMPTY`, `E_FILTER_INVALID`.
 
 **Testes de contrato**

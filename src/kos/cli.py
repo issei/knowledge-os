@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 from kos import __version__
-from kos import discovery, ingest, rebuild
+from kos import discovery, ingest, rebuild, search
 from kos.errors import EXIT_EXECUTION, EXIT_OK, EXIT_PARTIAL, EXIT_USAGE, KosError
 from kos.store import schema
 
@@ -73,6 +73,19 @@ def build_parser() -> argparse.ArgumentParser:
                      help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
     reb.add_argument("--json", action="store_true", help="saída JSON kos.rebuild.v1")
     reb.set_defaults(handler=_cmd_rebuild)
+
+    sea = sub.add_parser("search", help="busca evidências numa revisão indexada (CTR-06)")
+    sea.add_argument("query", help="texto da consulta")
+    sea.add_argument("--repo", help="só este repositório")
+    sea.add_argument("--rev", help="commit completo (padrão: última revisão consultável)")
+    sea.add_argument("-k", type=int, default=10, help="quantos resultados (padrão: 10)")
+    sea.add_argument("--path", help="filtro de caminho no estilo gitignore, ex.: 'docs/**'")
+    sea.add_argument("--kind", action="append", help="tipo de artefato (repetível)")
+    sea.add_argument("--include-generated", action="store_true", help="inclui arquivos gerados, marcados")
+    sea.add_argument("--home", default=os.environ.get("KOS_HOME", DEFAULT_HOME),
+                     help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
+    sea.add_argument("--json", action="store_true", help="saída JSON kos.search.v1")
+    sea.set_defaults(handler=_cmd_search)
     return parser
 
 
@@ -172,6 +185,26 @@ def _cmd_rebuild(args: argparse.Namespace) -> int:
         same = "igual ao anterior" if result.old_digest == result.new_digest else "diferente do anterior"
         print(f"rebuild {result.status}; conteúdo lógico {same} ({result.new_digest[:12]})")
     return EXIT_PARTIAL if result.status == "partial" else EXIT_OK
+
+
+def _cmd_search(args: argparse.Namespace) -> int:
+    result = search.search(Path(args.home), args.query, repo=args.repo, commit=args.rev, k=args.k,
+                           path_glob=args.path, kinds=args.kind, include_generated=args.include_generated)
+    if args.json:
+        print(json.dumps({
+            "schema": "kos.search.v1", "revisions": result.revisions,
+            "results": [h.to_json() for h in result.results], "diagnostics": result.diagnostics,
+        }, ensure_ascii=False, indent=2))
+    else:
+        for h in result.results:
+            lines = f"#L{h.locator.start_line}-L{h.locator.end_line}" if h.locator.start_line else ""
+            mark = " (gerado)" if h.is_generated else ""
+            print(f"{h.rank:>3}. {h.path_text}{lines}{mark}  [{h.score:.3f}]")
+            print("     " + h.snippet.replace("\n", " "))
+        revs = ", ".join(f"{r['repo']}@{r['commit_oid'][:12]}" for r in result.revisions)
+        d = result.diagnostics
+        print(f"{d['total_hits']} resultado(s) em {revs}; {d['latency_ms']} ms", file=sys.stderr)
+    return EXIT_OK
 
 
 def _split_arg(value: str, sep: str, flag: str) -> tuple[str, str]:
