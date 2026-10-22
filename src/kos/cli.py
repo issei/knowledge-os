@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 from kos import __version__
-from kos import answer, audit, cite, discovery, ingest, rebuild
+from kos import answer, audit, bench, cite, discovery, ingest, rebuild
 from kos.errors import EXIT_ABSTAINED, EXIT_EXECUTION, EXIT_OK, EXIT_PARTIAL, EXIT_USAGE, KosError
 from kos.store import schema
 
@@ -111,6 +111,25 @@ def build_parser() -> argparse.ArgumentParser:
                      help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
     ask.add_argument("--json", action="store_true", help="saída JSON kos.answer.v1")
     ask.set_defaults(handler=_cmd_ask)
+
+    ben = sub.add_parser("bench", help="golden set e relatório do benchmark (04-benchmark.md)")
+    ben_sub = ben.add_subparsers(dest="bench_command", required=True, parser_class=_Parser)
+    chk = ben_sub.add_parser("check", help="confere o golden set contra o Git (TC-BEN-02)")
+    chk.add_argument("--suite", required=True, help="arquivo YAML do golden set")
+    chk.add_argument("--repo", required=True, help="caminho do clone do repositório do golden set")
+    chk.add_argument("--json", action="store_true", help="saída JSON kos.bench.check.v1")
+    chk.set_defaults(handler=_cmd_bench_check)
+    brun = ben_sub.add_parser("run", help="mede B0, a configuração atual e as linhas de base")
+    brun.add_argument("--suite", required=True, help="arquivo YAML do golden set")
+    brun.add_argument("--repo", required=True, help="caminho do clone do repositório do golden set")
+    brun.add_argument("--policy", help="arquivo JSON da política (padrão: política empacotada)")
+    brun.add_argument("-k", type=int, default=10, help="resultados por consulta (padrão: 10)")
+    brun.add_argument("--repetitions", type=int, default=3, help="repetições para latência (padrão: 3)")
+    brun.add_argument("--out", help="grava o relatório kos.bench.v1 neste arquivo")
+    brun.add_argument("--home", default=os.environ.get("KOS_HOME", DEFAULT_HOME),
+                      help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
+    brun.add_argument("--json", action="store_true", help="imprime o relatório kos.bench.v1")
+    brun.set_defaults(handler=_cmd_bench_run)
 
     aud = sub.add_parser("audit", help="consulta a auditoria (CTR-10)")
     aud_sub = aud.add_subparsers(dest="audit_command", required=True, parser_class=_Parser)
@@ -296,6 +315,34 @@ def _human_answer(result) -> str:
     out.append("")
     out += [c.human() for c in result.citations]
     return "\n".join(out)
+
+
+def _cmd_bench_check(args: argparse.Namespace) -> int:
+    suite = bench.load_suite(Path(args.suite))
+    problems = bench.self_check(suite, Path(args.repo))
+    if args.json:
+        print(json.dumps({"schema": "kos.bench.check.v1", "suite": suite.name, "cases": len(suite.cases),
+                          "problems": problems}, ensure_ascii=False, indent=2))
+    else:
+        for problem in problems:
+            print(problem)
+        print(f"{suite.name}: {len(suite.cases)} caso(s), {len(problems)} problema(s)", file=sys.stderr)
+    return EXIT_EXECUTION if problems else EXIT_OK
+
+
+def _cmd_bench_run(args: argparse.Namespace) -> int:
+    suite = bench.load_suite(Path(args.suite))
+    policy = discovery.Policy.load(Path(args.policy)) if args.policy else discovery.Policy.default()
+    report = bench.run(suite, home=Path(args.home), repo_dir=Path(args.repo), policy=policy, k=args.k,
+                       repetitions=args.repetitions)
+    text = json.dumps(report, ensure_ascii=False, indent=2)
+    if args.out:
+        Path(args.out).write_text(text + "\n", encoding="utf-8")
+    if args.json:
+        print(text)
+    else:
+        print(bench.summary(report))
+    return EXIT_OK
 
 
 def _cmd_audit_verify(args: argparse.Namespace) -> int:

@@ -36,7 +36,7 @@ from kos.cite import Citation, cite
 from kos.discovery import media_type_for
 from kos.errors import KosError
 from kos.parsing import registry
-from kos.search import SearchResult, search
+from kos.search import COLUMN_WEIGHTS, SearchResult, search
 
 ABSTENTION_CODES = ("no_hits", "insufficient_evidence", "unverifiable_evidence", "revision_unavailable",
                     "out_of_scope", "llm_unsupported_output")
@@ -116,9 +116,11 @@ def split_parts(question: str) -> list[str]:
 
 def ask(home: Path, question: str, *, mode: str = "extractive", repo: str | None = None,
         commit: str | None = None, k: int = 10, thresholds: Thresholds = Thresholds(),
-        repos: dict[str, Path] | None = None, interface: str = "cli", max_claims: int = 5) -> Answer:
+        repos: dict[str, Path] | None = None, interface: str = "cli", max_claims: int = 5,
+        weights: tuple[float, float, float] | None = None) -> Answer:
     home = Path(home)
-    params = {"command": "ask", "mode": mode, "k": k, "thresholds": thresholds.to_json(),
+    weights = weights or COLUMN_WEIGHTS
+    params = {"command": "ask", "mode": mode, "k": k, "thresholds": thresholds.to_json(), "weights": list(weights),
               **{n: v for n, v in (("repo", repo), ("commit", commit)) if v is not None}}
     query_id = audit.start_query(home, interface=interface, question=question, params=params)
     if mode not in MODES:
@@ -128,7 +130,7 @@ def ask(home: Path, question: str, *, mode: str = "extractive", repo: str | None
         raise KosError("E_LLM_DISABLED", "o adaptador de LLM está desligado; use --mode extractive")
 
     try:
-        result = search(home, question, repo=repo, commit=commit, k=k)
+        result = search(home, question, repo=repo, commit=commit, k=k, weights=weights)
     except KosError as err:
         if err.code not in ("E_REVISION_NOT_INDEXED", "E_NO_INDEXED_REVISION"):
             audit.record_answer(home, query_id, outcome="error", mode=mode)
