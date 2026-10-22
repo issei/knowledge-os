@@ -7,7 +7,7 @@ name = "knowledge-os"
 version = "0.1.0.dev0"
 description = "Knowledge OS Enterprise: recuperação de conhecimento técnico com evidências rastreáveis."
 requires-python = ">=3.11"
-dependencies = []
+dependencies = ["markdown-it-py>=3,<4"]
 
 [project.scripts]
 kos = "kos.cli:main"
