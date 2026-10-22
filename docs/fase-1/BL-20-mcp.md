@@ -152,7 +152,7 @@ O servidor usa só a biblioteca padrão do Python.
 Motivos:
 
 1. O transporte stdio é JSON-RPC por linha. O código necessário é pequeno.
-2. O SDK MCP oficial acrescenta muitas dependências (por exemplo, `pydantic`, `anyio`, `httpx`, `starlette`).
+2. O SDK MCP oficial acrescenta muitas dependências. O pacote `mcp` 2.3.0 depende, entre outros, de `pydantic`, `anyio`, `starlette`, `uvicorn`, `httpx2`, `jsonschema` e `opentelemetry-api` (verificado no PyPI em 2026-10-22).
 3. O núcleo do Knowledge OS tem só 2 dependências. Esta regra diminui o risco de cadeia de suprimentos.
 
 Risco: o protocolo MCP muda.
