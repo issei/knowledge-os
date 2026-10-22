@@ -248,6 +248,14 @@ A sincronização `fragment` → `fragment_fts` é feita na mesma transação qu
 ## 5. Tabelas de `audit.sqlite`
 
 ```sql
+PRAGMA foreign_keys = ON;
+PRAGMA journal_mode = WAL;
+
+CREATE TABLE audit_meta (
+  key   TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+); -- schema_version, created_by_tool_version (acrescentada no BL-01)
+
 CREATE TABLE query_event (
   query_id        TEXT PRIMARY KEY,         -- UUID
   asked_at        TEXT NOT NULL,
