@@ -8,6 +8,7 @@ Linhas são indexadas a partir de 0 aqui; os localizadores expõem 1-based.
 from __future__ import annotations
 
 import re
+from bisect import bisect_right
 
 _BREAK = re.compile(rb"\r\n|\r|\n")
 
@@ -37,3 +38,7 @@ class LineTable:
 
     def is_blank(self, line: int) -> bool:
         return not self.blob[self._starts[line]:self._ends[line]].strip()
+
+    def line_of(self, byte: int) -> int:
+        """Linha (0-based) que contém o byte; um offset no fim do blob cai na última linha."""
+        return max(bisect_right(self._starts, byte) - 1, 0)

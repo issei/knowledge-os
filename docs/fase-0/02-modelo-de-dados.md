@@ -41,7 +41,7 @@ Os formatos não têm a mesma estrutura, então o localizador é polimórfico, c
 | Formato | Localizador primário | Complementos | Observação |
 |---|---|---|---|
 | Markdown, texto | `byte_range` | linhas (1-based, inclusivo), `heading_path` | Linhas derivadas dos bytes; quebra de linha normalizada só no texto indexado, nunca nos offsets. |
-| YAML | `byte_range` | `struct_path` (ex.: `$.navigation[2].nodes`) | Ponteiro só quando o parser fornecer posição; senão, só bytes. |
+| YAML | `byte_range` | `struct_path` em JSON Pointer (RFC 6901), igual ao JSON (ex.: `/navigation/2/nodes`; vários documentos: `/0/...`) | Ponteiro só quando o parser fornecer posição; senão, só bytes. |
 | JSON | `byte_range` | `struct_path` em JSON Pointer (RFC 6901) | Idem. |
 | Código | `byte_range` | linhas, `symbol_id` | Símbolo vem do Tree-sitter com versão da gramática. |
 | HTML (aprovado, Q-05) | `byte_range` | linhas, seletor estrutural | Texto extraído perde marcação; offsets apontam para o original. |

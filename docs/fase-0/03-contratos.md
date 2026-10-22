@@ -65,9 +65,10 @@ Verification = verified_exact | verified_normalized | derived | unverified
 
 **Regras de recorte (perfil inicial, ajustáveis pelo benchmark)**
 - Markdown: uma seção por cabeçalho; seções longas divididas por parágrafo respeitando blocos de código e tabelas; `heading_path` sempre presente. Front matter YAML vira fragmento `yaml_node`.
-- YAML/JSON: um fragmento por nó de primeiro e segundo nível com `struct_path`.
+- YAML/JSON: um fragmento por nó de primeiro e segundo nível com `struct_path` (JSON Pointer); o fragmento de um membro de objeto começa na chave. Sintaxe inválida (ex.: JSON com comentários) cai em janelas de texto, com `parsed_with_warnings` e `E_PARSE_SYNTAX`.
 - Código: um fragmento por símbolo de topo (função, classe, export) mais um fragmento "resto do arquivo"; testes reconhecidos (`describe`/`it`/`test`) viram `test_case`.
-- Texto puro: janelas por parágrafo.
+- Texto puro: janelas por parágrafo (até 40 linhas). Até o BL-15, código usa as mesmas janelas (até 60 linhas) com `fragment_kind = code_block`.
+- HTML: sem parser até o BL-22; sai como `skipped` com `E_PARSER_UNAVAILABLE`.
 
 **Falhas esperadas:** `E_DECODE` (encoding), `E_PARSE_SYNTAX` (com `parsed_with_warnings` quando houver recuperação parcial do Tree-sitter), `E_PARSER_UNAVAILABLE`, `E_TIMEOUT_PARSE`, `E_TOO_MANY_FRAGMENTS`.
 
