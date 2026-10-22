@@ -34,7 +34,7 @@ Verification = verified_exact | verified_normalized | derived | unverified
 3. Todo arquivo da árvore aparece na saída, como `eligible` ou `excluded` com a regra que o excluiu. Nada some em silêncio.
 4. Symlinks (`120000`) são `excluded` com `symlink_not_followed`. Submódulos (`160000`) são `excluded` com `submodule_not_followed`. Ponteiros LFS são `excluded` com `lfs_pointer` (Q-10).
 5. Arquivo acima de `max_bytes` é `excluded` com `too_large`.
-6. Binário (heurística de bytes nulos + tipo detectado) sem perfil que o aceite é `excluded` com `binary_unsupported`.
+6. Binário sem perfil que o aceite é `excluded` com `binary_unsupported`. Heurística (BL-03): nos primeiros 8000 bytes, há NUL **e** o trecho não é UTF-8 válido, ou mais de 10% dos bytes são de controle. NUL sozinho não basta: no corpus, `scripts/optimize-critical-path.mjs` é texto e usa um byte NUL como sentinela.
 
 **Falhas esperadas:** `E_REPO_NOT_FOUND`, `E_COMMIT_NOT_FOUND`, `E_POLICY_INVALID`, `E_GIT_UNAVAILABLE`.
 

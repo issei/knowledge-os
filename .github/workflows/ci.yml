@@ -67,8 +67,12 @@ jobs:
           python-version: "3.13"
       - run: python -m compileall -q src tests scripts
       - run: python -m pip wheel . --no-deps -w dist
-      - name: Wheel contém o DDL
-        run: python -m zipfile -l dist/*.whl | grep -E 'kos/store/(index|audit)\.sql'
+      - name: Wheel contém o DDL e a política padrão
+        run: |
+          python -m zipfile -l dist/*.whl > wheel.txt
+          for f in kos/store/index.sql kos/store/audit.sql kos/discovery/default_policy.json; do
+            grep -q "$f" wheel.txt || { echo "faltando no wheel: $f"; exit 1; }
+          done
 
   tests:
     name: Testes ${{ matrix.suite }} (py${{ matrix.python }})

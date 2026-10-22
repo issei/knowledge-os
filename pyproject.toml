@@ -16,4 +16,4 @@ kos = "kos.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-kos = ["store/*.sql"]
+kos = ["store/*.sql", "discovery/*.json"]

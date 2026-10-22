@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 
 from kos import __version__
+from kos import discovery
 from kos.errors import EXIT_EXECUTION, EXIT_OK, EXIT_USAGE, KosError
 from kos.store import schema
 
@@ -42,6 +43,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     init.add_argument("--json", action="store_true", help="saída JSON kos.init.v1")
     init.set_defaults(handler=_cmd_init)
+
+    disc = sub.add_parser("discover", help="lista os arquivos elegíveis de uma revisão (CTR-01)")
+    disc.add_argument("repo", help="caminho do repositório Git")
+    disc.add_argument("--rev", default="HEAD", help="revisão (padrão: HEAD)")
+    disc.add_argument("--policy", help="arquivo JSON da política (padrão: política empacotada)")
+    disc.add_argument("--json", action="store_true", help="saída JSON kos.discover.v1")
+    disc.set_defaults(handler=_cmd_discover)
     return parser
 
 
@@ -74,6 +82,29 @@ def _cmd_init(args: argparse.Namespace) -> int:
         for r in results:
             verb = "criado" if r.status == "created" else "já existia"
             print(f"{r.path}: {verb} (esquema {schema.SCHEMA_VERSION})")
+    return EXIT_OK
+
+
+def _cmd_discover(args: argparse.Namespace) -> int:
+    policy = discovery.Policy.load(Path(args.policy)) if args.policy else discovery.Policy.default()
+    commit, files = discovery.discover(Path(args.repo), args.rev, policy)
+    eligible = [f for f in files if f.eligibility == "eligible"]
+    if args.json:
+        payload = {
+            "schema": "kos.discover.v1",
+            "commit_oid": commit,
+            "policy": {"policy_id": policy.policy_id, "version": policy.version,
+                       "sha256": policy.sha256},
+            "counts": {"total": len(files), "eligible": len(eligible),
+                       "excluded": len(files) - len(eligible)},
+            "files": [f.to_json() for f in files],
+        }
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+    else:
+        for f in files:
+            status = f.artifact_kind if f.eligibility == "eligible" else f"excluído: {f.exclusion_rule}"
+            print(f"{f.path_text}\t{status}")
+        print(f"{commit}: {len(files)} arquivo(s), {len(eligible)} elegível(is)", file=sys.stderr)
     return EXIT_OK
 
 
