@@ -129,6 +129,19 @@ def record_citations(home: Path, query_id: str, citations: list[Citation],
         conn.close()
 
 
+def record_answer(home: Path, query_id: str, *, outcome: str, mode: str, abstention_code: str | None = None,
+                  answer_text: str | None = None) -> None:
+    """Grava o `answer_record`; no modo extrativo não há adaptador de LLM a registrar."""
+    conn = _connect(home)
+    try:
+        with conn:
+            conn.execute(
+                "INSERT INTO answer_record(query_id, outcome, mode, abstention_code, answer_text, llm_adapter_json)"
+                " VALUES (?, ?, ?, ?, ?, NULL)", (query_id, outcome, mode, abstention_code, answer_text))
+    finally:
+        conn.close()
+
+
 def audited_search(home: Path, query: str, *, interface: str = "cli", **filters) -> tuple[str, SearchResult]:
     """`search` com o evento gravado antes e os resultados gravados depois (TC-AUD-01)."""
     params = {"command": "search", **{k: v for k, v in filters.items() if v not in (None, False, [])}}

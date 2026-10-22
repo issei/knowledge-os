@@ -15,8 +15,8 @@ import sys
 from pathlib import Path
 
 from kos import __version__
-from kos import audit, cite, discovery, ingest, rebuild
-from kos.errors import EXIT_EXECUTION, EXIT_OK, EXIT_PARTIAL, EXIT_USAGE, KosError
+from kos import answer, audit, cite, discovery, ingest, rebuild
+from kos.errors import EXIT_ABSTAINED, EXIT_EXECUTION, EXIT_OK, EXIT_PARTIAL, EXIT_USAGE, KosError
 from kos.store import schema
 
 DEFAULT_HOME = ".kos"
@@ -97,6 +97,20 @@ def build_parser() -> argparse.ArgumentParser:
                      help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
     cit.add_argument("--json", action="store_true", help="saída JSON kos.cite.v1")
     cit.set_defaults(handler=_cmd_cite)
+
+    ask = sub.add_parser("ask", help="responde com trechos citados ou se abstém (CTR-08, CTR-09)")
+    ask.add_argument("question", help="pergunta em texto livre")
+    ask.add_argument("--mode", choices=answer.MODES, default="extractive",
+                     help="extractive (padrão) ou llm (desligado até o BL-21)")
+    ask.add_argument("--repo", help="só este repositório")
+    ask.add_argument("--rev", help="commit completo (padrão: última revisão consultável)")
+    ask.add_argument("-k", type=int, default=10, help="quantos resultados recuperar (padrão: 10)")
+    ask.add_argument("--clone", action="append", default=[], metavar="NOME=CAMINHO",
+                     help="onde está o clone, para reler os blobs (padrão: o caminho da última ingestão)")
+    ask.add_argument("--home", default=os.environ.get("KOS_HOME", DEFAULT_HOME),
+                     help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
+    ask.add_argument("--json", action="store_true", help="saída JSON kos.answer.v1")
+    ask.set_defaults(handler=_cmd_ask)
 
     aud = sub.add_parser("audit", help="consulta a auditoria (CTR-10)")
     aud_sub = aud.add_subparsers(dest="audit_command", required=True, parser_class=_Parser)
@@ -246,6 +260,42 @@ def _cmd_cite(args: argparse.Namespace) -> int:
     else:
         print("\n".join(c.human() for c in citations))
     return EXIT_OK
+
+
+def _cmd_ask(args: argparse.Namespace) -> int:
+    clones = {k: Path(v) for k, v in (_split_arg(item, "=", "--clone") for item in args.clone)}
+    result = answer.ask(Path(args.home), args.question, mode=args.mode, repo=args.repo, commit=args.rev,
+                        k=args.k, repos=clones)
+    if args.json:
+        print(json.dumps({"schema": "kos.answer.v1", **result.to_json()}, ensure_ascii=False, indent=2))
+    else:
+        print(_human_answer(result))
+    return EXIT_ABSTAINED if result.outcome == "abstained" else EXIT_OK
+
+
+def _human_answer(result) -> str:
+    revs = ", ".join(f"{r['repo']}@{r['commit_oid'][:12]}" for r in result.revisions) or "nenhuma revisão"
+    out = []
+    if result.outcome == "abstained":
+        ab = result.abstention
+        out.append(f"Sem resposta ({ab['code']}): {ab['message']}. Revisão consultada: {revs}.")
+        if result.citations:
+            out.append("Evidências próximas (relacionadas, não respondem):")
+    else:
+        out.append(f"Resposta extrativa, revisão {revs}:")
+        conflict_claims = {s["claim_id"] for c in result.conflicts for s in c["sides"]}
+        for claim in result.claims:
+            if claim.claim_id not in conflict_claims:
+                refs = "".join(f"[{n}]" for n in claim.citation_nos)
+                out.append(f"- {claim.text.strip()} {refs}")
+        for c in result.conflicts:
+            sides = " × ".join(f"{s['value']} " + "".join(f"[{n}]" for n in s["citation_nos"]) for s in c["sides"])
+            out.append(f"Conflito sobre '{c['topic']}': {sides}. Nenhum lado foi escolhido.")
+        for g in result.gaps:
+            out.append(f"Sem suporte: \"{g['part']}\" (sem evidência para: {', '.join(g['missing_terms'])})")
+    out.append("")
+    out += [c.human() for c in result.citations]
+    return "\n".join(out)
 
 
 def _cmd_audit_verify(args: argparse.Namespace) -> int:

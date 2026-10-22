@@ -246,6 +246,13 @@ Formato humano canônico (CLI):
 - TC-ANS-04 GS-CONF-002 → `answered_with_conflict` com os dois lados.
 - TC-ANS-05 Adaptador desligado + `--mode llm` → `E_LLM_DISABLED`; nenhuma chamada de rede (verificada por dublê de transporte).
 
+**Notas de implementação (BL-13)**
+- `kos ask PERGUNTA [--mode extractive|llm] [--repo NOME] [--rev COMMIT] [-k N] [--clone NOME=CAMINHO] [--json]`; saída JSON `kos.answer.v1`. Código de saída: 0 resposta, 3 abstenção, 2 erro.
+- Afirmação extrativa: um trecho por artefato, na ordem do rank, no máximo 5. O trecho é a linha do fragmento que mais cobre os termos essenciais, citada por sub-intervalo (`verified_exact` na linha). HTML cita o fragmento inteiro, porque o texto visível não tem recorte literal por linha.
+- Conflito, regra simples e declarada: o mesmo termo essencial aparece precedido de números diferentes nos trechos verificados (`18 KPIs` × `22 KPIs`). Cada valor vira um lado com as suas citações e o seu escopo (caminho, commit). Nenhum lado é escolhido. Contradição sem número (ex.: GS-CONF-001, Vite × "sem build") não é detectada por esta regra.
+- `mode=llm` grava `answer_record` com `outcome = error` e devolve `E_LLM_DISABLED`; o adaptador não existe até o BL-21, então não há caminho de rede.
+- Afirmações removidas por falta de citação verificada (inv. 1) ficam em `removed_claims`.
+
 ---
 
 ## CTR-09 — Abstenção
@@ -276,6 +283,12 @@ Códigos fechados:
 - TC-ABS-03 Revisão não indexada → `revision_unavailable`.
 - TC-ABS-04 Todas as citações `unverified` → `unverifiable_evidence`.
 - TC-ABS-05 Pergunta composta com uma parte sustentada e outra não → resposta parcial + declaração da lacuna.
+
+**Notas de implementação (BL-13)**
+- Termos essenciais: palavras da pergunta, em minúsculas e sem acento, menos uma lista fixa de palavras sem conteúdo (artigos, preposições, interrogativos, em PT-BR e inglês).
+- A pergunta é dividida em partes em `?`, `;` e em "e" seguido de interrogativo ("e quando", "e qual"…). Cada parte é avaliada sozinha; partes sem suporte vão para `gaps` (inv. 4) e só há abstenção quando nenhuma parte tem suporte.
+- Limiares iniciais (`Thresholds`, gravados em `params_json` de cada consulta): `min_hits = 1`, `min_verified_citations = 1`, `require_terms_in_corpus = true`, `min_term_coverage = null`. A regra ligada por padrão é **termo ausente do corpus**: uma parte é `insufficient_evidence` se algum termo essencial não ocorre em nenhum fragmento da revisão. Ela não depende de pontuação, logo não precisa de calibração; também não pega casos em que todos os termos existem mas a resposta não (GS-ABS-002, GS-ABS-003). `min_term_coverage` (cobertura dos termos pelos trechos recuperados) existe desligado, para o BL-18 calibrar.
+- Escolha registrada: exigir cobertura total dos termos no top-10 fazia GS-SPEC-003, GS-CODE-001 e GS-CODE-002 se absterem sem motivo ("declara", "acontece", "função" não estão nos trechos); um corte intermediário escolhido olhando o golden set seria sobreajuste. Por isso a regra padrão é a de termo ausente do corpus.
 
 ---
 
