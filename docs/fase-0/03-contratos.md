@@ -98,6 +98,8 @@ Verification = verified_exact | verified_normalized | derived | unverified
 6. O resultado final é idêntico ao de uma ingestão `full` da mesma revisão (propriedade verificada por TC-INC-04).
 7. Mudança de `Policy` ou de perfil força reavaliação dos itens afetados (o cache é chaveado por perfil).
 
+**Modo `full` (BL-08).** Mesmas invariantes 3 a 5, sem base. A linha `ingest_run` nasce `running` numa transação curta (que também marca `aborted` qualquer `running` órfã); o resto roda numa única transação `BEGIN IMMEDIATE`, que fecha a linha com o status final. Outra ingestão no mesmo índice encontra o banco travado e falha na hora com `E_LOCKED`. `(versão, perfil)` já processado com status diferente de `failed` é reaproveitado (`reused`), porque fragmentos são função pura de (blob, perfil). Aviso de parsing (`parsed_with_warnings`) é registrado em `processing_error` com `severity = warning` e não deixa a execução `partial`. Submódulo entra no manifesto com `content_sha256 = gitlink:<oid>` e `byte_size = 0`, porque o objeto não está no repositório.
+
 **Falhas esperadas:** `E_BASE_NOT_INDEXED`, `E_BASE_NOT_ANCESTOR` (aviso; continua como diff de árvores), `E_LOCKED` (outra ingestão em curso), `E_DISK_FULL`, `E_ABORTED`.
 
 **Testes de contrato**

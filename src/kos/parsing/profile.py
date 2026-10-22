@@ -77,9 +77,16 @@ class Locator:
         return {k: v for k, v in self.__dict__.items() if v is not None}
 
 
-def fragment_key(blob_oid: str, profile_fingerprint: str, locator: Locator) -> str:
-    """Identidade estável do fragmento: SHA-256 de blob ‖ perfil ‖ localizador canônico."""
-    return _sha256("\x1f".join((blob_oid, profile_fingerprint, canonical_json(locator.canonical()))))
+def fragment_key(repo_name: str, path_bytes: bytes, blob_oid: str, profile_fingerprint: str,
+                 locator: Locator) -> str:
+    """Identidade estável do fragmento: SHA-256 de repositório ‖ caminho ‖ blob ‖ perfil ‖ localizador.
+
+    O caminho entra porque o mesmo blob pode estar em dois arquivos (cópias, páginas
+    geradas iguais à fonte); sem ele, os dois fragmentos teriam a mesma chave e a
+    citação não saberia qual arquivo apontar.
+    """
+    return _sha256("\x1f".join((repo_name, path_bytes.hex(), blob_oid, profile_fingerprint,
+                                 canonical_json(locator.canonical()))))
 
 
 def register_profile(conn: sqlite3.Connection, profile: Profile) -> int:
