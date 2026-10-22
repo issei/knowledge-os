@@ -1,0 +1,74 @@
+# Entrega do Knowledge OS. Descrição completa em docs/ci-cd.md.
+#
+# Publica uma GitHub Release com wheel e sdist quando a versão do
+# pyproject.toml ainda não tem tag v<versão>. Sem mudança de versão, não faz
+# nada. Roda depois do merge automático (chamado pela CI) e em pushes na main
+# feitos por pessoas (merge pelo botão), porque merges feitos pelo GITHUB_TOKEN
+# não disparam novos workflows.
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths: ["src/**", "pyproject.toml"]
+  workflow_call:
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publicar versão
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - id: version
+        name: Versão e necessidade de entrega
+        run: |
+          VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+            echo "v$VERSION já publicada; nada a entregar."
+          else
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+          fi
+          # Versões com letras (0.1.0.dev0, 1.0.0rc1) saem como pré-release.
+          if echo "$VERSION" | grep -q '[a-z]'; then
+            echo "prerelease=--prerelease" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Testes antes de entregar
+        if: steps.version.outputs.needed == 'true'
+        run: python -m unittest discover -s tests -t .
+        env:
+          PYTHONPATH: src
+      - name: Build (wheel + sdist)
+        if: steps.version.outputs.needed == 'true'
+        run: |
+          python -m pip install --upgrade build
+          python -m build
+      - name: GitHub Release
+        if: steps.version.outputs.needed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "v$VERSION" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$(git rev-parse HEAD)" \
+            --title "v$VERSION" \
+            --generate-notes ${{ steps.version.outputs.prerelease }}
