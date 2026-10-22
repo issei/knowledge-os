@@ -1,0 +1,221 @@
+# Golden set C0 do Knowledge OS (BL-14). Fonte: docs/fase-0/04-benchmark.md §3.
+# Esquema: §2 do mesmo documento. Casos ancorados em mauricio-site@73570bb; ao trocar a
+# revisão, reconfira cada caso (`kos bench check`) e registre a mudança aqui (TC-BEN-02).
+#
+# Histórico:
+# - 2026-10-22: cópia literal dos 14 casos da Fase 0, sem alteração.
+suite: c0
+repo: mauricio-site
+revisao: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+casos:
+  - id: GS-LEX-001
+    classe: lexical
+    pergunta: "Qual comando roda o quality gate do site?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: package.json, linhas: "14", relevancia: 2 }
+      - { caminho: AGENTS.md, linhas: "39", relevancia: 1 }   # "npm run gate já cobra…"
+    evidencia_esperada:
+      - { caminho: package.json, linhas: "14", trecho: "\"gate\": \"node scripts/quality-gate.mjs\"" }
+    resultado_esperado:
+      outcome: answered
+      afirmacoes_obrigatorias: ["npm run gate", "scripts/quality-gate.mjs"]
+    criterios: [recall@k, mrr, citacao_exata, cobertura_afirmacoes]
+
+  - id: GS-LEX-002
+    classe: lexical
+    pergunta: "Qual ferramenta faz a tradução do gêmeo em inglês do site?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: AGENTS.md, linhas: "35-36", relevancia: 2 }
+      - { caminho: scripts/i18n/README.md, linhas: "4-5", relevancia: 2 }
+    evidencia_esperada:
+      - { caminho: AGENTS.md, linhas: "35", trecho: "A tradução é **local** (Argos Translate, `scripts/i18n/`)" }
+    resultado_esperado:
+      outcome: answered
+      afirmacoes_obrigatorias: ["Argos Translate", "local"]
+      afirmacoes_proibidas: ["usa um LLM para traduzir"]
+    criterios: [recall@k, precision@k, citacao_exata, cobertura_afirmacoes]
+
+  - id: GS-SPEC-001
+    classe: spec_fact
+    pergunta: "Qual é o piso de contraste da Camada 3 da página apresentacao?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: AGENTS.md, linhas: "121", relevancia: 2 }
+      - { caminho: "docs/specs/pages/apresentação/ADR-ap-001-namespace-e-excecao-dark-tech.md", linhas: "25-28", relevancia: 1 }
+      - { caminho: tests/apresentacao.tokens.test.mjs, linhas: "39", relevancia: 1 }
+    evidencia_esperada:
+      - { caminho: AGENTS.md, linhas: "121", trecho: "e um piso de contraste de **7:1** na Camada 3." }
+    resultado_esperado:
+      outcome: answered
+      afirmacoes_obrigatorias: ["7:1"]
+      afirmacoes_proibidas: ["4.5:1 como piso da Camada 3"]
+    criterios: [recall@k, mrr, citacao_exata, cobertura_afirmacoes]
+    nota: "Caminho com 'ç' e 'ã' exercita CTR-01 (TC-DSC-04)."
+
+  - id: GS-SPEC-002
+    classe: spec_fact
+    pergunta: "Por que os fluxos da página engenharia-agentes-ia não usam bpmn-js, e quando isso pode mudar?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: docs/decisions/ADR-eai-002-fluxos-em-svg-sem-bpmnjs.md, linhas: "9-22", relevancia: 2 }
+    evidencia_esperada:
+      - { caminho: docs/decisions/ADR-eai-002-fluxos-em-svg-sem-bpmnjs.md, linhas: "15", trecho: "No MVP/V1, renderizar os fluxos com **SVG/CSS próprios** (sem `bpmn-js`):" }
+      - { caminho: docs/decisions/ADR-eai-002-fluxos-em-svg-sem-bpmnjs.md, linhas: "21-22", trecho: "`bpmn-js` **editável** fica **diferido para a V2** (WU-13)" }
+    resultado_esperado:
+      outcome: answered
+      afirmacoes_obrigatorias: ["dependência pesada / bundle", "diferido para a V2 com novo ADR"]
+    criterios: [recall@k, citacao_exata, cobertura_afirmacoes]
+
+  - id: GS-SPEC-003
+    classe: spec_fact
+    pergunta: "Qual SLO de latência de recuperação a página do Knowledge OS declara?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: src/knowledge-os-presentation.html, linhas: "1015", relevancia: 2 }
+      - { caminho: src/knowledge-os-presentation.html, linhas: "1991", relevancia: 1 }
+    evidencia_esperada:
+      - { caminho: src/knowledge-os-presentation.html, linhas: "1015", trecho: "SLOs por domínio: P95 retrieval &lt; 800ms; freshness &lt; 24h." }
+    resultado_esperado:
+      outcome: answered
+      afirmacoes_obrigatorias: ["P95 < 800 ms é uma meta declarada na página"]
+      afirmacoes_proibidas: ["o sistema atinge P95 < 800 ms"]
+    criterios: [recall@k, citacao_exata, cobertura_afirmacoes, taxa_sem_suporte]
+    nota: "Usa o parser HTML (Q-05 decidido: HTML entra no MVP)."
+
+  - id: GS-CODE-001
+    classe: code
+    pergunta: "O que acontece quando um hexadecimal é escrito em src/apresentacao.html?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: scripts/guard-ap-tokens.mjs, linhas: "2-10", relevancia: 2 }
+      - { caminho: scripts/guard-ap-tokens.mjs, linhas: "50-59", relevancia: 2 }
+      - { caminho: AGENTS.md, linhas: "124-125", relevancia: 1 }
+    evidencia_esperada:
+      - { caminho: scripts/guard-ap-tokens.mjs, linhas: "58", trecho: "process.exit(2);" }
+    resultado_esperado:
+      outcome: answered
+      afirmacoes_obrigatorias: ["hook PostToolUse bloqueia (saída 2)", "cores só em src/apresentacao.css"]
+    criterios: [recall@k, mrr, citacao_exata, cobertura_afirmacoes]
+
+  - id: GS-CODE-002
+    classe: code
+    pergunta: "Onde é montado o bloco PF:START da home e qual função o grava no HTML?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: scripts/gen-portfolio.mjs, linhas: "386-402", relevancia: 2, simbolo: pfBlock }
+      - { caminho: scripts/gen-portfolio.mjs, linhas: "580", relevancia: 2, simbolo: fill }
+      - { caminho: scripts/gen-portfolio.mjs, linhas: "593", relevancia: 1 }
+    evidencia_esperada:
+      - { caminho: scripts/gen-portfolio.mjs, linhas: "386", trecho: "const pfBlock = `<!-- PF:START" }
+    resultado_esperado:
+      outcome: answered
+      afirmacoes_obrigatorias: ["pfBlock em scripts/gen-portfolio.mjs", "função fill"]
+    criterios: [recall@k, mrr, citacao_exata, simbolo_correto]
+
+  - id: GS-CODE-003
+    classe: code
+    pergunta: "Qual teste verifica o contraste mínimo de 7:1 na Camada 3 da apresentação?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: tests/apresentacao.tokens.test.mjs, linhas: "39", relevancia: 2 }
+    evidencia_esperada:
+      - { caminho: tests/apresentacao.tokens.test.mjs, linhas: "39", trecho: "test('INV-AP-02 · contraste do texto da Camada 3 ≥ 7:1 (evolução 11)'" }
+    resultado_esperado:
+      outcome: answered
+      afirmacoes_obrigatorias: ["tests/apresentacao.tokens.test.mjs", "INV-AP-02"]
+    criterios: [recall@k, mrr, citacao_exata]
+
+  - id: GS-CONF-001
+    classe: conflict
+    pergunta: "O projeto usa Vite ou é sem build step?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: docs/specs/14-adr/ADR-001-sem-build.md, linhas: "1-24", relevancia: 2 }
+      - { caminho: package.json, linhas: "30", relevancia: 2 }
+      - { caminho: docs/specs/ARCHITECTURE.md, linhas: "395", relevancia: 1 }
+      - { caminho: docs/specs/000-INDEX.md, linhas: "3", relevancia: 1 }   # escopo LifeOS
+    evidencia_esperada:
+      - { caminho: docs/specs/14-adr/ADR-001-sem-build.md, linhas: "24", trecho: "| Vite/bundler | Toolchain e lockfiles p/ manter; quebra o ethos \"view-source\" |" }
+      - { caminho: package.json, linhas: "30", trecho: "\"vite\": \"^6.0.0\"" }
+    resultado_esperado:
+      outcome: answered_with_conflict
+      afirmacoes_obrigatorias: ["o site usa Vite 6", "ADR-001 rejeita Vite no escopo do LifeOS/life3d"]
+      afirmacoes_proibidas: ["o site inteiro é sem build", "escolher um lado sem citar o outro"]
+    criterios: [recall@k, citacao_exata, cobertura_afirmacoes, deteccao_de_conflito]
+
+  - id: GS-CONF-002
+    classe: conflict
+    pergunta: "Quantos KPIs cognitivos o Knowledge OS define?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: src/knowledge-os-presentation.html, linhas: "690", relevancia: 2 }
+      - { caminho: src/knowledge-os-presentation.html, linhas: "1014", relevancia: 2 }
+      - { caminho: src/knowledge-os-presentation.html, linhas: "2109", relevancia: 2 }
+    evidencia_esperada:
+      - { caminho: src/knowledge-os-presentation.html, linhas: "1014", trecho: "18 KPIs cognitivos divididos em 4 camadas (§7)." }
+      - { caminho: src/knowledge-os-presentation.html, linhas: "2109", trecho: "22 KPIs cognitivos em 5 camadas" }
+    resultado_esperado:
+      outcome: answered_with_conflict
+      afirmacoes_obrigatorias: ["a mesma página diz 18 (4 camadas) e 22 (5 camadas)"]
+      afirmacoes_proibidas: ["um único número sem mencionar a divergência"]
+    criterios: [recall@k, citacao_exata, deteccao_de_conflito]
+    nota: "Usa o parser HTML (Q-05 decidido)."
+
+  - id: GS-CONF-003
+    classe: conflict
+    pergunta: "Quantas páginas HTML existem em src/?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: AGENTS.md, linhas: "64-65", relevancia: 2 }
+    evidencia_esperada:
+      - { caminho: AGENTS.md, linhas: "64", trecho: "CodeGraph has no HTML parser, so the 36" }
+    resultado_esperado:
+      outcome: abstained   # abstenção parcial
+      abstention_codes_aceitos: [insufficient_evidence]
+      afirmacoes_obrigatorias: ["AGENTS.md afirma 36", "a contagem não é verificada pela documentação"]
+      afirmacoes_proibidas: ["são 36 páginas (como fato verificado)", "são 46 páginas (o MVP não agrega contagens)"]
+    criterios: [citacao_exata, taxa_sem_suporte, reconhecimento_de_lacuna]
+    nota: "Fato da inspeção: 46 arquivos src/*.html fora de src/en/. O caso testa que uma afirmação documental não vira fato verificado. Contagem por manifesto pode virar recurso futuro."
+
+  - id: GS-ABS-001
+    classe: no_answer
+    pergunta: "Qual é o RTO e o RPO do site em produção?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes: []
+    evidencia_esperada: []
+    resultado_esperado:
+      outcome: abstained
+      abstention_codes_aceitos: [no_hits, insufficient_evidence]
+      afirmacoes_proibidas: ["qualquer valor de RTO ou RPO"]
+    criterios: [reconhecimento_de_lacuna, taxa_sem_suporte]
+    nota: "Verificado: busca por RTO/RPO em arquivos de texto do repositório retornou 0 ocorrências (só PNGs binários casaram)."
+
+  - id: GS-ABS-002
+    classe: no_answer
+    pergunta: "Qual foi o Recall@10 medido do Knowledge OS?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: src/knowledge-os-presentation.html, linhas: "2210", relevancia: 1 }   # meta, não medição
+    evidencia_esperada: []
+    resultado_esperado:
+      outcome: abstained
+      abstention_codes_aceitos: [insufficient_evidence]
+      afirmacoes_obrigatorias: ["não há medição registrada", "existe uma meta declarada: Recall@10 > 0.75 (rotulada como meta)"]
+      afirmacoes_proibidas: ["Recall@10 medido = 0.75 ou qualquer valor"]
+    criterios: [reconhecimento_de_lacuna, taxa_sem_suporte]
+
+  - id: GS-ABS-003
+    classe: no_answer
+    pergunta: "Qual banco vetorial o Knowledge OS usa em produção?"
+    revisao_esperada: 73570bbc9b99e2a1e44d6844b9375bc4aa16e357
+    fontes_relevantes:
+      - { caminho: src/knowledge-os-presentation.html, linhas: "1068", relevancia: 1 }   # visão "vector + BM25 + graph", sem produto
+    evidencia_esperada: []
+    resultado_esperado:
+      outcome: abstained
+      abstention_codes_aceitos: [insufficient_evidence]
+      afirmacoes_proibidas: ["nome de qualquer produto vetorial", "afirmar que há produção"]
+    criterios: [reconhecimento_de_lacuna, taxa_sem_suporte]
+    nota: "Verificado: nenhum de qdrant, pgvector, pinecone, weaviate, milvus, chromadb, faiss aparece no repositório."

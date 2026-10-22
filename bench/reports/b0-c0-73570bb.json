@@ -1,0 +1,1905 @@
+{
+  "schema": "kos.bench.v1",
+  "suite": "c0",
+  "repo": "mauricio-site",
+  "revision": "73570bbc9b99e2a1e44d6844b9375bc4aa16e357",
+  "generated_at": "2026-10-22T12:07:02+00:00",
+  "k": 10,
+  "repetitions": 3,
+  "versions": {
+    "kos": "0.1.0.dev0",
+    "python": "3.12.3",
+    "sqlite": "3.45.1",
+    "markdown-it-py": "3.0.0",
+    "PyYAML": "6.0.3",
+    "git": "git version 2.43.0"
+  },
+  "hardware": {
+    "platform": "Linux-6.18.44-fc-v140-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "cpu_count": 4
+  },
+  "index": {
+    "fingerprint": "6ff00d98875a78616715a4ef0435b7633a3b80146537c76970c9bd874144be38",
+    "ingest_status": "succeeded",
+    "ingest_seconds": 9.69,
+    "ingest_counts": {
+      "discovered": 907,
+      "eligible": 856,
+      "reused": 0,
+      "processed": 856,
+      "failed": 0,
+      "warnings": 0,
+      "fragments": 13999
+    },
+    "index_bytes": 24240128,
+    "fragments": 13999,
+    "eligible_files": 776
+  },
+  "configs": {
+    "B0": {
+      "description": "bm25 com pesos iguais; abstenção só estrutural (no_hits, unverifiable_evidence)",
+      "weights": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "thresholds": {
+        "min_hits": 1,
+        "min_verified_citations": 1,
+        "require_terms_in_corpus": false,
+        "min_term_coverage": null
+      },
+      "retrieval": {
+        "aggregate": {
+          "recall@1": 0.1859,
+          "recall@1__n": 13,
+          "precision@1": 0.3846,
+          "precision@1__n": 13,
+          "recall@3": 0.3654,
+          "recall@3__n": 13,
+          "precision@3": 0.2821,
+          "precision@3__n": 13,
+          "recall@5": 0.3654,
+          "recall@5__n": 13,
+          "precision@5": 0.1692,
+          "precision@5__n": 13,
+          "recall@10": 0.4167,
+          "recall@10__n": 13,
+          "precision@10": 0.1077,
+          "precision@10__n": 13,
+          "mrr": 0.3542,
+          "mrr__n": 8
+        },
+        "per_case": {
+          "GS-LEX-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-LEX-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.5,
+            "precision@1": 1.0,
+            "recall@3": 0.5,
+            "precision@3": 0.3333333333333333,
+            "recall@5": 0.5,
+            "precision@5": 0.2,
+            "recall@10": 0.5,
+            "precision@10": 0.1,
+            "mrr": 1.0,
+            "first_essential_rank": 1
+          },
+          "GS-SPEC-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.3333333333333333,
+            "precision@1": 1.0,
+            "recall@3": 0.3333333333333333,
+            "precision@3": 0.3333333333333333,
+            "recall@5": 0.3333333333333333,
+            "precision@5": 0.2,
+            "recall@10": 0.6666666666666666,
+            "precision@10": 0.2,
+            "mrr": 1.0,
+            "first_essential_rank": 1
+          },
+          "GS-SPEC-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 1.0,
+            "precision@3": 0.3333333333333333,
+            "recall@5": 1.0,
+            "precision@5": 0.2,
+            "recall@10": 1.0,
+            "precision@10": 0.2,
+            "mrr": 0.3333333333333333,
+            "first_essential_rank": 3
+          },
+          "GS-SPEC-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CODE-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.3333333333333333,
+            "precision@1": 1.0,
+            "recall@3": 1.0,
+            "precision@3": 0.6666666666666666,
+            "recall@5": 1.0,
+            "precision@5": 0.4,
+            "recall@10": 1.0,
+            "precision@10": 0.2,
+            "mrr": 0.5,
+            "first_essential_rank": 2
+          },
+          "GS-CODE-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CODE-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CONF-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.25,
+            "precision@1": 1.0,
+            "recall@3": 0.25,
+            "precision@3": 1.0,
+            "recall@5": 0.25,
+            "precision@5": 0.6,
+            "recall@10": 0.25,
+            "precision@10": 0.3
+          },
+          "GS-CONF-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.6666666666666666,
+            "precision@3": 0.6666666666666666,
+            "recall@5": 0.6666666666666666,
+            "precision@5": 0.4,
+            "recall@10": 1.0,
+            "precision@10": 0.3
+          },
+          "GS-CONF-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0
+          },
+          "GS-ABS-001": {
+            "applicable": false,
+            "returned": 10
+          },
+          "GS-ABS-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 1.0,
+            "precision@1": 1.0,
+            "recall@3": 1.0,
+            "precision@3": 0.3333333333333333,
+            "recall@5": 1.0,
+            "precision@5": 0.2,
+            "recall@10": 1.0,
+            "precision@10": 0.1
+          },
+          "GS-ABS-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0
+          }
+        }
+      },
+      "answer": {
+        "aggregate": {
+          "outcome_ok": 0.6429,
+          "outcome_ok__n": 14,
+          "improper_abstention": 0.0,
+          "improper_abstention__n": 14,
+          "gap_recognized": 0.0,
+          "gap_recognized__n": 3,
+          "conflict_detected": 0.5,
+          "conflict_detected__n": 2,
+          "expected_evidence_hit": 0.2727,
+          "expected_evidence_hit__n": 11
+        },
+        "per_case": {
+          "GS-LEX-001": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 4,
+              "verified_normalized": 1
+            }
+          },
+          "GS-LEX-002": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 5
+            }
+          },
+          "GS-SPEC-001": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": true,
+            "citation_states": {
+              "verified_exact": 5
+            }
+          },
+          "GS-SPEC-002": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 4,
+              "verified_normalized": 1
+            }
+          },
+          "GS-SPEC-003": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 4,
+              "verified_normalized": 1
+            }
+          },
+          "GS-CODE-001": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 5
+            }
+          },
+          "GS-CODE-002": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 5
+            }
+          },
+          "GS-CODE-003": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 5
+            }
+          },
+          "GS-CONF-001": {
+            "outcome": "answered",
+            "expected_outcome": "answered_with_conflict",
+            "abstention_code": null,
+            "outcome_ok": false,
+            "improper_abstention": false,
+            "conflict_detected": false,
+            "expected_evidence_hit": true,
+            "citation_states": {
+              "verified_exact": 4,
+              "verified_normalized": 1
+            }
+          },
+          "GS-CONF-002": {
+            "outcome": "answered_with_conflict",
+            "expected_outcome": "answered_with_conflict",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "conflict_detected": true,
+            "expected_evidence_hit": true,
+            "citation_states": {
+              "verified_exact": 5,
+              "verified_normalized": 4
+            }
+          },
+          "GS-CONF-003": {
+            "outcome": "answered_with_conflict",
+            "expected_outcome": "abstained",
+            "abstention_code": null,
+            "outcome_ok": false,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 7
+            }
+          },
+          "GS-ABS-001": {
+            "outcome": "answered",
+            "expected_outcome": "abstained",
+            "abstention_code": null,
+            "outcome_ok": false,
+            "improper_abstention": false,
+            "gap_recognized": false,
+            "citation_states": {
+              "verified_exact": 4,
+              "verified_normalized": 1
+            }
+          },
+          "GS-ABS-002": {
+            "outcome": "answered",
+            "expected_outcome": "abstained",
+            "abstention_code": null,
+            "outcome_ok": false,
+            "improper_abstention": false,
+            "gap_recognized": false,
+            "citation_states": {
+              "verified_normalized": 2,
+              "verified_exact": 3
+            }
+          },
+          "GS-ABS-003": {
+            "outcome": "answered",
+            "expected_outcome": "abstained",
+            "abstention_code": null,
+            "outcome_ok": false,
+            "improper_abstention": false,
+            "gap_recognized": false,
+            "citation_states": {
+              "verified_exact": 4,
+              "verified_normalized": 1
+            }
+          }
+        }
+      },
+      "citations": {
+        "total": 76,
+        "verified": 76,
+        "exactness": 1.0,
+        "false_verified_exact": []
+      },
+      "latency": {
+        "search": {
+          "p50_ms": 58.7,
+          "p95_ms": 86.0,
+          "samples": 42
+        },
+        "ask": {
+          "p50_ms": 116.6,
+          "p95_ms": 161.5,
+          "samples": 42
+        }
+      }
+    },
+    "atual": {
+      "description": "padrões desta versão",
+      "weights": [
+        1.0,
+        2.0,
+        1.0
+      ],
+      "thresholds": {
+        "min_hits": 1,
+        "min_verified_citations": 1,
+        "require_terms_in_corpus": true,
+        "min_term_coverage": null
+      },
+      "retrieval": {
+        "aggregate": {
+          "recall@1": 0.109,
+          "recall@1__n": 13,
+          "precision@1": 0.3077,
+          "precision@1__n": 13,
+          "recall@3": 0.2628,
+          "recall@3__n": 13,
+          "precision@3": 0.2308,
+          "precision@3__n": 13,
+          "recall@5": 0.3654,
+          "recall@5__n": 13,
+          "precision@5": 0.1846,
+          "precision@5__n": 13,
+          "recall@10": 0.4551,
+          "recall@10__n": 13,
+          "precision@10": 0.1231,
+          "precision@10__n": 13,
+          "mrr": 0.3438,
+          "mrr__n": 8
+        },
+        "per_case": {
+          "GS-LEX-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-LEX-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.5,
+            "precision@1": 1.0,
+            "recall@3": 0.5,
+            "precision@3": 0.3333333333333333,
+            "recall@5": 0.5,
+            "precision@5": 0.2,
+            "recall@10": 1.0,
+            "precision@10": 0.2,
+            "mrr": 1.0,
+            "first_essential_rank": 1
+          },
+          "GS-SPEC-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.3333333333333333,
+            "precision@1": 1.0,
+            "recall@3": 0.3333333333333333,
+            "precision@3": 0.3333333333333333,
+            "recall@5": 0.3333333333333333,
+            "precision@5": 0.2,
+            "recall@10": 0.6666666666666666,
+            "precision@10": 0.2,
+            "mrr": 1.0,
+            "first_essential_rank": 1
+          },
+          "GS-SPEC-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 1.0,
+            "precision@5": 0.2,
+            "recall@10": 1.0,
+            "precision@10": 0.2,
+            "mrr": 0.25,
+            "first_essential_rank": 4
+          },
+          "GS-SPEC-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CODE-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.3333333333333333,
+            "precision@1": 1.0,
+            "recall@3": 1.0,
+            "precision@3": 0.6666666666666666,
+            "recall@5": 1.0,
+            "precision@5": 0.4,
+            "recall@10": 1.0,
+            "precision@10": 0.2,
+            "mrr": 0.5,
+            "first_essential_rank": 2
+          },
+          "GS-CODE-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CODE-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CONF-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.25,
+            "precision@1": 1.0,
+            "recall@3": 0.25,
+            "precision@3": 1.0,
+            "recall@5": 0.25,
+            "precision@5": 0.8,
+            "recall@10": 0.25,
+            "precision@10": 0.4
+          },
+          "GS-CONF-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.3333333333333333,
+            "precision@3": 0.3333333333333333,
+            "recall@5": 0.6666666666666666,
+            "precision@5": 0.4,
+            "recall@10": 1.0,
+            "precision@10": 0.3
+          },
+          "GS-CONF-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0
+          },
+          "GS-ABS-001": {
+            "applicable": false,
+            "returned": 10
+          },
+          "GS-ABS-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 1.0,
+            "precision@3": 0.3333333333333333,
+            "recall@5": 1.0,
+            "precision@5": 0.2,
+            "recall@10": 1.0,
+            "precision@10": 0.1
+          },
+          "GS-ABS-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0
+          }
+        }
+      },
+      "answer": {
+        "aggregate": {
+          "outcome_ok": 0.7143,
+          "outcome_ok__n": 14,
+          "improper_abstention": 0.0,
+          "improper_abstention__n": 14,
+          "gap_recognized": 0.3333,
+          "gap_recognized__n": 3,
+          "conflict_detected": 0.5,
+          "conflict_detected__n": 2,
+          "expected_evidence_hit": 0.2727,
+          "expected_evidence_hit__n": 11
+        },
+        "per_case": {
+          "GS-LEX-001": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 4,
+              "verified_normalized": 1
+            }
+          },
+          "GS-LEX-002": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 5
+            }
+          },
+          "GS-SPEC-001": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": true,
+            "citation_states": {
+              "verified_exact": 5
+            }
+          },
+          "GS-SPEC-002": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 5
+            }
+          },
+          "GS-SPEC-003": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 4,
+              "verified_normalized": 1
+            }
+          },
+          "GS-CODE-001": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 5
+            }
+          },
+          "GS-CODE-002": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 5
+            }
+          },
+          "GS-CODE-003": {
+            "outcome": "answered",
+            "expected_outcome": "answered",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 5
+            }
+          },
+          "GS-CONF-001": {
+            "outcome": "answered",
+            "expected_outcome": "answered_with_conflict",
+            "abstention_code": null,
+            "outcome_ok": false,
+            "improper_abstention": false,
+            "conflict_detected": false,
+            "expected_evidence_hit": true,
+            "citation_states": {
+              "verified_exact": 4,
+              "verified_normalized": 1
+            }
+          },
+          "GS-CONF-002": {
+            "outcome": "answered_with_conflict",
+            "expected_outcome": "answered_with_conflict",
+            "abstention_code": null,
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "conflict_detected": true,
+            "expected_evidence_hit": true,
+            "citation_states": {
+              "verified_exact": 4,
+              "verified_normalized": 4
+            }
+          },
+          "GS-CONF-003": {
+            "outcome": "answered",
+            "expected_outcome": "abstained",
+            "abstention_code": null,
+            "outcome_ok": false,
+            "improper_abstention": false,
+            "expected_evidence_hit": false,
+            "citation_states": {
+              "verified_exact": 5
+            }
+          },
+          "GS-ABS-001": {
+            "outcome": "abstained",
+            "expected_outcome": "abstained",
+            "abstention_code": "insufficient_evidence",
+            "outcome_ok": true,
+            "improper_abstention": false,
+            "gap_recognized": true,
+            "citation_states": {
+              "verified_exact": 2,
+              "verified_normalized": 1
+            }
+          },
+          "GS-ABS-002": {
+            "outcome": "answered",
+            "expected_outcome": "abstained",
+            "abstention_code": null,
+            "outcome_ok": false,
+            "improper_abstention": false,
+            "gap_recognized": false,
+            "citation_states": {
+              "verified_normalized": 2,
+              "verified_exact": 3
+            }
+          },
+          "GS-ABS-003": {
+            "outcome": "answered",
+            "expected_outcome": "abstained",
+            "abstention_code": null,
+            "outcome_ok": false,
+            "improper_abstention": false,
+            "gap_recognized": false,
+            "citation_states": {
+              "verified_exact": 4,
+              "verified_normalized": 1
+            }
+          }
+        }
+      },
+      "citations": {
+        "total": 71,
+        "verified": 71,
+        "exactness": 1.0,
+        "false_verified_exact": []
+      },
+      "latency": {
+        "search": {
+          "p50_ms": 60.8,
+          "p95_ms": 84.1,
+          "samples": 42
+        },
+        "ask": {
+          "p50_ms": 162.8,
+          "p95_ms": 241.6,
+          "samples": 42
+        }
+      }
+    },
+    "B0-grep": {
+      "description": "só recuperação",
+      "retrieval": {
+        "aggregate": {
+          "recall@1": 0.0,
+          "recall@1__n": 13,
+          "precision@1": 0.0,
+          "precision@1__n": 13,
+          "recall@3": 0.0,
+          "recall@3__n": 13,
+          "precision@3": 0.0,
+          "precision@3__n": 13,
+          "recall@5": 0.0,
+          "recall@5__n": 13,
+          "precision@5": 0.0,
+          "precision@5__n": 13,
+          "recall@10": 0.1026,
+          "recall@10__n": 13,
+          "precision@10": 0.0308,
+          "precision@10__n": 13,
+          "mrr": 0.0208,
+          "mrr__n": 8
+        },
+        "per_case": {
+          "GS-LEX-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-LEX-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-SPEC-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.3333333333333333,
+            "precision@10": 0.1,
+            "mrr": 0.16666666666666666,
+            "first_essential_rank": 6
+          },
+          "GS-SPEC-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-SPEC-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CODE-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.3333333333333333,
+            "precision@10": 0.1,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CODE-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CODE-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CONF-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0
+          },
+          "GS-CONF-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.6666666666666666,
+            "precision@10": 0.2
+          },
+          "GS-CONF-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0
+          },
+          "GS-ABS-001": {
+            "applicable": false,
+            "returned": 10
+          },
+          "GS-ABS-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0
+          },
+          "GS-ABS-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0
+          }
+        }
+      },
+      "latency": {
+        "search": {
+          "p50_ms": 399.3,
+          "p95_ms": 3777.3,
+          "samples": 42
+        }
+      }
+    },
+    "B0-path": {
+      "description": "só recuperação",
+      "retrieval": {
+        "aggregate": {
+          "recall@1": 0.0,
+          "recall@1__n": 13,
+          "precision@1": 0.0,
+          "precision@1__n": 13,
+          "recall@3": 0.0449,
+          "recall@3__n": 13,
+          "precision@3": 0.0513,
+          "precision@3__n": 13,
+          "recall@5": 0.0449,
+          "recall@5__n": 13,
+          "precision@5": 0.0308,
+          "precision@5__n": 13,
+          "recall@10": 0.0449,
+          "recall@10__n": 13,
+          "precision@10": 0.0154,
+          "precision@10__n": 13,
+          "mrr": 0.0,
+          "mrr__n": 8
+        },
+        "per_case": {
+          "GS-LEX-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-LEX-002": {
+            "applicable": true,
+            "returned": 6,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-SPEC-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.3333333333333333,
+            "precision@3": 0.3333333333333333,
+            "recall@5": 0.3333333333333333,
+            "precision@5": 0.2,
+            "recall@10": 0.3333333333333333,
+            "precision@10": 0.1,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-SPEC-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-SPEC-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CODE-001": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CODE-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CODE-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0,
+            "mrr": 0.0,
+            "first_essential_rank": null
+          },
+          "GS-CONF-001": {
+            "applicable": true,
+            "returned": 7,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.25,
+            "precision@3": 0.3333333333333333,
+            "recall@5": 0.25,
+            "precision@5": 0.2,
+            "recall@10": 0.25,
+            "precision@10": 0.1
+          },
+          "GS-CONF-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0
+          },
+          "GS-CONF-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0
+          },
+          "GS-ABS-001": {
+            "applicable": false,
+            "returned": 6
+          },
+          "GS-ABS-002": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0
+          },
+          "GS-ABS-003": {
+            "applicable": true,
+            "returned": 10,
+            "recall@1": 0.0,
+            "precision@1": 0.0,
+            "recall@3": 0.0,
+            "precision@3": 0.0,
+            "recall@5": 0.0,
+            "precision@5": 0.0,
+            "recall@10": 0.0,
+            "precision@10": 0.0
+          }
+        }
+      },
+      "latency": {
+        "search": {
+          "p50_ms": 4.2,
+          "p95_ms": 5.8,
+          "samples": 42
+        }
+      }
+    }
+  },
+  "human_review": [
+    {
+      "case": "GS-LEX-001",
+      "outcome": "answered",
+      "required": [
+        "npm run gate",
+        "scripts/quality-gate.mjs"
+      ],
+      "forbidden": [],
+      "claims": [
+        {
+          "text": "(`.github/workflows/quality-gate.yml`), e o PR roda só a camada `fast`. O gargalo",
+          "citations": [
+            "docs/specs/QUALITY_GATE_PARALELO.md#L14"
+          ]
+        },
+        {
+          "text": "Quality Gate Determinístico (Fail-Closed)\nComando unificado de validação que bloqueia o deploy em caso de qualquer divergência.\n✓ Build Vite 6 sem erros + suíte Playwright cross-browser (Chromium, Firefox, WebKit)\n✓ Auditoria automatizada de acessibilidade WCAG 2.1 AA via axe-core\nPilar 04\n/.well-kn",
+          "citations": [
+            "src/boutique-empresarial-showcase.html#L266"
+          ]
+        },
+        {
+          "text": "| Determinismo testável (P2) | Gate roda **offline** (sem rede), Playwright com fixtures; mesma fatia → mesmo resultado verde. |",
+          "citations": [
+            "docs/specs/pages/engenharia-agentes-ia/BUILD_PLAN.md#L18"
+          ]
+        },
+        {
+          "text": "## O que ele roda",
+          "citations": [
+            ".claude/skills/run-quality-gate/SKILL.md#L20"
+          ]
+        },
+        {
+          "text": "mente sobre o conteúdo atual. (O `npm run gate` do passo 1 já roda esta",
+          "citations": [
+            ".claude/skills/ship-page/SKILL.md#L25"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-LEX-002",
+      "outcome": "answered",
+      "required": [
+        "Argos Translate",
+        "local"
+      ],
+      "forbidden": [
+        "usa um LLM para traduzir"
+      ],
+      "claims": [
+        {
+          "text": "O site publica duas línguas a partir de uma fonte só: PT-BR na raiz, e um gêmeo",
+          "citations": [
+            "AGENTS.md#L25"
+          ]
+        },
+        {
+          "text": "# Motor de tradução local do gêmeo /en/ — nenhuma API de LLM envolvida.",
+          "citations": [
+            "scripts/i18n/requirements.txt#L1"
+          ]
+        },
+        {
+          "text": "  resultado** — é a maior fonte de risco de regressão do gêmeo em inglês.",
+          "citations": [
+            "docs/specs/pages/case-agents/00_SDD_case_agents.md#L901"
+          ]
+        },
+        {
+          "text": "| Gêmeo `/en/` (Argos, NMT local) | tradução automática do PT | **beneficiado**: frase ambígua em PT vira frase errada em EN (ver §3, item 1) |",
+          "citations": [
+            "docs/specs/editorial/PTBR-CONTROLADO-PILOTO.md#L28"
+          ]
+        },
+        {
+          "text": "### Último passo: o gêmeo em inglês",
+          "citations": [
+            ".claude/skills/new-page/SKILL.md#L87"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-SPEC-001",
+      "outcome": "answered",
+      "required": [
+        "7:1"
+      ],
+      "forbidden": [
+        "4.5:1 como piso da Camada 3"
+      ],
+      "claims": [
+        {
+          "text": "e um piso de contraste de **7:1** na Camada 3. **É a única exceção à paleta Dark Tech.**",
+          "citations": [
+            "AGENTS.md#L121"
+          ]
+        },
+        {
+          "text": "description: Autor único dos design tokens da página v3.0. Materializa a Tabela 1.4 em src/apresentacao.css e prova por cálculo cada razão de contraste, incluindo o piso de 7:1 da Camada 3.",
+          "citations": [
+            "docs/specs/pages/apresentação/ESPECIFICACAO-AGENTICA-IMPLEMENTACAO.md#L921"
+          ]
+        },
+        {
+          "text": "> com piso de **7:1** na Camada 3. **Não reprove esses arquivos por desviarem do Dark Tech.**",
+          "citations": [
+            ".claude/agents/a11y-design-reviewer.md#L31"
+          ]
+        },
+        {
+          "text": "- **Contraste (Regra da Casa†):** Apenas um ratio mínimo de **3:1** é forçado, para evitar ilegibilidade completa. (O Nível A não tem critério de contraste — este piso é política deste padrão, não da WCAG.)",
+          "citations": [
+            "docs/a11y/references/guide-compliance-profiles.md#L57"
+          ]
+        },
+        {
+          "text": " * Tabela 1.4 da spec foi materializada — incluindo o piso de 7:1 da Camada 3",
+          "citations": [
+            "tests/apresentacao.tokens.test.mjs#L5"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-SPEC-002",
+      "outcome": "answered",
+      "required": [
+        "dependência pesada / bundle",
+        "diferido para a V2 com novo ADR"
+      ],
+      "forbidden": [],
+      "claims": [
+        {
+          "text": "- **Escopo:** visualizações de pipeline/resiliência da página `engenharia-agentes-ia`",
+          "citations": [
+            "docs/decisions/ADR-eai-002-fluxos-em-svg-sem-bpmnjs.md#L5"
+          ]
+        },
+        {
+          "text": "| Padrão de diagrama SVG inline acessível | `engenharia-confianca` (DAG SVG), ADR-eai-002 (*\"fluxos em SVG sem bpmn.js\"*) | Precedente decidido: Zonas usam **SVG inline**, sem lib de diagrama |",
+          "citations": [
+            "docs/specs/pages/apresentação/ESPECIFICACAO-AGENTICA-IMPLEMENTACAO.md#L73"
+          ]
+        },
+        {
+          "text": "## 2. Elementos BPMN utilizados (subconjunto intencionalmente pequeno)",
+          "citations": [
+            "docs/specs/pages/engenharia-agentes-ia/05_bpmn_diagramas_executaveis.md#L40"
+          ]
+        },
+        {
+          "text": "- [ ] **SDD-fonte** identificado (qual doc/seção de `docs/specs/pages/engenharia-agentes-ia/`).",
+          "citations": [
+            "docs/governance/dor-dod-eai.md#L7"
+          ]
+        },
+        {
+          "text": "Continuar\nEngenharia de Agentes de IA\nOs princípios do determinismo e o MCP como fronteira.\nCase Agents\nRoteamento de queries e seleção segura de ferramentas num agente bancário.\nA Engenharia da Confiança\nDa intenção à execução agêntica confiável.\nCatálogo\nTodo o ecossistema, em cinco pilares.\n© 202",
+          "citations": [
+            "src/agent-ready.html#L2259"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-SPEC-003",
+      "outcome": "answered",
+      "required": [
+        "P95 < 800 ms é uma meta declarada na página"
+      ],
+      "forbidden": [
+        "o sistema atinge P95 < 800 ms"
+      ],
+      "claims": [
+        {
+          "text": "A nova página deve reconhecer que GraphRAG e memória podem ajudar na recuperação de contexto, mas não garantem frescor, identidade do snapshot ou alinhamento com o repositório atual.",
+          "citations": [
+            "docs/specs/pages/develop-engineering/00_SPEC_Conteúdo.md#L75"
+          ]
+        },
+        {
+          "text": "GraphRAG é recuperação aumentada (RAG) ancorada num Knowledge Graph em vez de só embeddings planos. As relações explícitas do grafo dão contexto estruturado à IA, reduzindo alucinação e melhorando a rastreabilidade das respostas.",
+          "citations": [
+            "public/knowledge-os-presentation.md#L26"
+          ]
+        },
+        {
+          "text": "Perguntas frequentes\nO que é o Knowledge OS?\nÉ uma plataforma IA-First que trata o conhecimento corporativo como infraestrutura cognitiva governada: grafo de conhecimento, recuperação aumentada (GraphRAG), governança federada e observabilidade. O objetivo é acelerar decisões mantendo a IA segura e a",
+          "citations": [
+            "src/knowledge-os-presentation.html#L2429"
+          ]
+        },
+        {
+          "text": "tags: [sre, observabilidade, opentelemetry, traces, agent-traces, slo, error-budget, custo, tokens, latencia, retrieval-quality, incidentes, dex]",
+          "citations": [
+            "docs/references/digital-workplace-agentico/04_transversais/operacao_observabilidade_sre_dex.md#L6"
+          ]
+        },
+        {
+          "text": "      lede: 'O **Knowledge OS** trata o conhecimento corporativo como **infraestrutura cognitiva governada**, não como um repositório passivo de documentos. É uma plataforma IA-First que combina grafo de conhecimento, recuperação aumentada e governança para que decisões sejam mais rápidas e a IA ope",
+          "citations": [
+            "scripts/seo/pages.mjs#L384"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-CODE-001",
+      "outcome": "answered",
+      "required": [
+        "hook PostToolUse bloqueia (saída 2)",
+        "cores só em src/apresentacao.css"
+      ],
+      "forbidden": [],
+      "claims": [
+        {
+          "text": "- **Nenhum hexadecimal** pode ser escrito fora de `src/apresentacao.css` — aplicado",
+          "citations": [
+            "AGENTS.md#L125"
+          ]
+        },
+        {
+          "text": " * src/apresentacao.html ou src/js/apresentacao/** bloqueia a ferramenta.",
+          "citations": [
+            "scripts/guard-ap-tokens.mjs#L7"
+          ]
+        },
+        {
+          "text": "A regra não depende de disciplina do agente. `scripts/guard-ap-tokens.mjs` (hook `PostToolUse`) bloqueia a escrita de qualquer hexadecimal em `src/apresentacao.html` e `src/js/apresentacao/**`, e `tests/apresentacao.tokens.test.mjs` reprova o build se um par de contraste regredir.",
+          "citations": [
+            "docs/specs/pages/apresentação/ADR-ap-001-namespace-e-excecao-dark-tech.md#L74"
+          ]
+        },
+        {
+          "text": "`scripts/guard-ap-tokens.mjs`: se o `file_path` casa `src/apresentacao.html` ou `src/js/apresentacao/**` **e** o conteúdo contém `#[0-9a-fA-F]{3,8}` fora de comentário → exit 2 com a mensagem *\"tokens só em src/apresentacao.css (ADR-ap-001)\"*. Trava arquitetural em vez de convenção — o Frontend fisi",
+          "citations": [
+            "docs/specs/pages/apresentação/ESPECIFICACAO-AGENTICA-IMPLEMENTACAO.md#L799"
+          ]
+        },
+        {
+          "text": "> **Exceção registrada — `apresentacao` (ADR-ap-001).** `src/apresentacao.html`,",
+          "citations": [
+            ".claude/agents/a11y-design-reviewer.md#L28"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-CODE-002",
+      "outcome": "answered",
+      "required": [
+        "pfBlock em scripts/gen-portfolio.mjs",
+        "função fill"
+      ],
+      "forbidden": [],
+      "claims": [
+        {
+          "text": "1. HOME-Q1: o bloco `PF` cita \"Itaú\" 21 vezes (fonte: `public/cv.json`, via `scripts/gen-portfolio.mjs`). Essas menções devem continuar no currículo público? Se não, a correção é no `cv.json`, seguida do gerador e do `i18n:sync`.",
+          "citations": [
+            "docs/specs/editorial/PTBR-CONTROLADO-PAGINAS.md#L810"
+          ]
+        },
+        {
+          "text": "  html = html.replace(/(?:^[\\t ]*<!-- ={10,} -->\\n)+(?=[\\t ]*<!-- AEO:START)/gm, '');",
+          "citations": [
+            "scripts/seo/build-aeo.mjs#L63"
+          ]
+        },
+        {
+          "text": "// O conteúdo do currículo NÃO é montado aqui: scripts/gen-portfolio.mjs grava",
+          "citations": [
+            "src/js/curriculo.js#L3"
+          ]
+        },
+        {
+          "text": "  return `<header id=\"home\" class=\"pf-hero\">",
+          "citations": [
+            "scripts/gen-portfolio.mjs#L159"
+          ]
+        },
+        {
+          "text": "**Contexto:** home \"Mapa de Linhas\" (`src/index.html`)",
+          "citations": [
+            "docs/specs/pages/portfolio/ADR-pf-001-paleta-de-linhas.md#L5"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-CODE-003",
+      "outcome": "answered",
+      "required": [
+        "tests/apresentacao.tokens.test.mjs",
+        "INV-AP-02"
+      ],
+      "forbidden": [],
+      "claims": [
+        {
+          "text": "description: Autor único dos design tokens da página v3.0. Materializa a Tabela 1.4 em src/apresentacao.css e prova por cálculo cada razão de contraste, incluindo o piso de 7:1 da Camada 3.",
+          "citations": [
+            "docs/specs/pages/apresentação/ESPECIFICACAO-AGENTICA-IMPLEMENTACAO.md#L921"
+          ]
+        },
+        {
+          "text": "> com piso de **7:1** na Camada 3. **Não reprove esses arquivos por desviarem do Dark Tech.**",
+          "citations": [
+            ".claude/agents/a11y-design-reviewer.md#L31"
+          ]
+        },
+        {
+          "text": "e um piso de contraste de **7:1** na Camada 3. **É a única exceção à paleta Dark Tech.**",
+          "citations": [
+            "AGENTS.md#L121"
+          ]
+        },
+        {
+          "text": "### Teste de usabilidade (mínimo 3 perfis: financeiro/executivo, engenharia, produto)",
+          "citations": [
+            "docs/specs/pages/operacao-capital-cognitivo/especificacao-portal-economia-real-ia.md#L332"
+          ]
+        },
+        {
+          "text": "WCAG 1.4.3 Contraste (mínimo).",
+          "citations": [
+            "public/acessibilidade.md#L217"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-CONF-001",
+      "outcome": "answered",
+      "required": [
+        "o site usa Vite 6",
+        "ADR-001 rejeita Vite no escopo do LifeOS/life3d"
+      ],
+      "forbidden": [
+        "o site inteiro é sem build",
+        "escolher um lado sem citar o outro"
+      ],
+      "claims": [
+        {
+          "text": "| Vite/bundler | Toolchain e lockfiles p/ manter; quebra o ethos \"view-source\" |",
+          "citations": [
+            "docs/specs/14-adr/ADR-001-sem-build.md#L24"
+          ]
+        },
+        {
+          "text": "Quality Gate Determinístico (Fail-Closed)\nComando unificado de validação que bloqueia o deploy em caso de qualquer divergência.\n✓ Build Vite 6 sem erros + suíte Playwright cross-browser (Chromium, Firefox, WebKit)\n✓ Auditoria automatizada de acessibilidade WCAG 2.1 AA via axe-core\nPilar 04\n/.well-kn",
+          "citations": [
+            "src/boutique-empresarial-showcase.html#L266"
+          ]
+        },
+        {
+          "text": "    call npx vite build || goto :erro",
+          "citations": [
+            "local.bat#L46"
+          ]
+        },
+        {
+          "text": "  (~17 s em série). Rodam **ao mesmo tempo que o `vite build`**.",
+          "citations": [
+            "docs/specs/QUALITY_GATE_PARALELO.md#L86"
+          ]
+        },
+        {
+          "text": "> Stack real do projeto: **Vite** (root `src/`, build → `dist/`) + **Playwright** (E2E/a11y).",
+          "citations": [
+            "docs/specs/pages/engenharia-agentes-ia/PROGRESS.md#L4"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-CONF-002",
+      "outcome": "answered_with_conflict",
+      "required": [
+        "a mesma página diz 18 (4 camadas) e 22 (5 camadas)"
+      ],
+      "forbidden": [
+        "um único número sem mencionar a divergência"
+      ],
+      "claims": [
+        {
+          "text": "1. **KOS-P1 (B3.04 / números):** a contagem de KPIs muda ao longo da página. O herói diz \"18 KPIs cognitivos + FinOps\" e o diagnóstico 09 diz \"18 KPIs cognitivos divididos em 4 camadas\"; a seção de observabilidade e o bloco editorial dizem \"22 KPIs cognitivos em 5 camadas\". A tabela tem 18 KPIs em 4",
+          "citations": [
+            "docs/specs/editorial/PTBR-CONTROLADO-PAGINAS.md#L74"
+          ]
+        },
+        {
+          "text": "Correção aplicada\n18 KPIs cognitivos divididos em 4 camadas (§7).\nSLOs por domínio: P95 retrieval < 800ms; freshness < 24h.\nDashboard \"Knowledge Vital Signs\" com alerting.\n10 Roadmap & Adoção",
+          "citations": [
+            "src/knowledge-os-presentation.html#L1012"
+          ]
+        },
+        {
+          "text": "      { mode: 'Verificar', links: [['#diagnostico', '10 dimensões da revisão crítica'], ['#seguranca', 'Limites da IA'], ['#observabilidade', '22 KPIs cognitivos']],",
+          "citations": [
+            "scripts/editorial/editorial.data.mjs#L139"
+          ]
+        },
+        {
+          "text": "    const kpis = Array.isArray(data.kpis) && data.kpis.length",
+          "citations": [
+            "src/js/engenharia-confianca.js#L178"
+          ]
+        },
+        {
+          "text": "5 kpis",
+          "citations": [
+            "src/knowledge-os-presentation.html#L2197"
+          ]
+        },
+        {
+          "text": "18 kpis",
+          "citations": [
+            "src/knowledge-os-presentation.html#L1012",
+            "docs/specs/editorial/PTBR-CONTROLADO-PAGINAS.md#L62",
+            "src/knowledge-os-presentation.html#L668"
+          ]
+        },
+        {
+          "text": "22 kpis",
+          "citations": [
+            "docs/specs/editorial/PTBR-CONTROLADO-PAGINAS.md#L62",
+            "src/knowledge-os-presentation.html#L668",
+            "scripts/editorial/editorial.data.mjs#L95",
+            "src/knowledge-os-presentation.html#L2109"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-CONF-003",
+      "outcome": "answered_with_conflict",
+      "required": [
+        "AGENTS.md afirma 36",
+        "a contagem não é verificada pela documentação"
+      ],
+      "forbidden": [
+        "são 36 páginas (como fato verificado)",
+        "são 46 páginas (o MVP não agrega contagens)"
+      ],
+      "claims": [
+        {
+          "text": "test(`${slug}: continuações apontam para páginas que existem`, () => {",
+          "citations": [
+            "tests/editorial-layer.test.mjs#L59"
+          ]
+        },
+        {
+          "text": "**Escopo:** `src/privacidade.html`, `src/termos.html`, `src/cookies.html` e componente `cookie-consent`",
+          "citations": [
+            "docs/specs/pages/LEGAL_PAGES.md#L6"
+          ]
+        },
+        {
+          "text": "| Engenharia Reversa | [`src/proposta-engenharia-reversa.html`](../../../../src/proposta-engenharia-reversa.html) | [`docs/references/propostav2.md`](../../../references/propostav2.md) |",
+          "citations": [
+            "docs/specs/pages/engenharia-confianca/05_glossario_e_referencias_cruzadas.md#L66"
+          ]
+        },
+        {
+          "text": "Toda a navegação reaproveita e referencia páginas que **já existem** no repositório. Nada é inventado",
+          "citations": [
+            "docs/specs/pages/engenharia-confianca/README.md#L32"
+          ]
+        },
+        {
+          "text": "  if ((m = f.match(/^src\\/(?:en\\/)?([^/]+)\\.html$/))) return { tipo: 'paginas', paginas: [m[1]] };",
+          "citations": [
+            "scripts/gate/impacto.mjs#L58"
+          ]
+        },
+        {
+          "text": "2.1 paginas",
+          "citations": [
+            "docs/specs/pages/engenharia-confianca/05_glossario_e_referencias_cruzadas.md#L62"
+          ]
+        },
+        {
+          "text": "17 paginas",
+          "citations": [
+            "docs/specs/pages/apresentação/ESPECIFICACAO-AGENTICA-IMPLEMENTACAO.md#L44"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-ABS-001",
+      "outcome": "answered",
+      "required": [],
+      "forbidden": [
+        "qualquer valor de RTO ou RPO"
+      ],
+      "claims": [
+        {
+          "text": "Rode o scan por POST em https://isitagentready.com/api/scan e leia o JSON: o texto de remediação da interface é fixo por check e não muda entre tentativas, enquanto a evidência aponta qual validador reprovou. Corrija um check por vez, publique — o scan roda contra produção, não contra o repositório ",
+          "citations": [
+            "public/agent-ready.md#L32"
+          ]
+        },
+        {
+          "text": "O ciclo corrigir → publicar → rescanear\nCorrija um check por vez. Duas correções no mesmo deploy e você não sabe qual funcionou.\nPublique. Um scan roda contra produção, não contra o seu repositório.\nRescaneie e leia a evidência, não o texto de remediação.\nQuando passar, escreva o teste. Um check que",
+          "citations": [
+            "src/agent-ready.html#L2054"
+          ]
+        },
+        {
+          "text": "> **Premissa de escopo (confirmar — pergunta Q1).** O repositório já é um site em produção (41 páginas PT-BR +",
+          "citations": [
+            "docs/specs/a11y-first/product-spec.md#L12"
+          ]
+        },
+        {
+          "text": "| **Especialista em IA** | \"O que meu RAG precisa antes de ir para produção?\" | `#conhecimento` |",
+          "citations": [
+            "docs/specs/pages/digital-workplace-agentico/00_visao_personas_objetivos.md#L27"
+          ]
+        },
+        {
+          "text": "- Se houver ganho apenas em confiança, curiosidade, tempo, número de perguntas ou produção de explicação, não o classifique como ganho de aprendizagem.",
+          "citations": [
+            "docs/specs/pages/aprendizagem-autorregulada/fonte_revisao_cientifica.md#L440"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-ABS-002",
+      "outcome": "answered",
+      "required": [
+        "não há medição registrada",
+        "existe uma meta declarada: Recall@10 > 0.75 (rotulada como meta)"
+      ],
+      "forbidden": [
+        "Recall@10 medido = 0.75 ou qualquer valor"
+      ],
+      "claims": [
+        {
+          "text": "Critérios de saída\n✓ Knowledge Coverage > 60% no domínio piloto\n✓ Recall@10 > 0.75 em benchmark interno\n✓ Knowledge Council operando\n✓ NPS interno > 40 entre engenheiros",
+          "citations": [
+            "src/knowledge-os-presentation.html#L2207"
+          ]
+        },
+        {
+          "text": "| [6](#6-o-crash-silencioso-medido) | O Crash Silencioso medido — a falha que 54 testes não pegaram |",
+          "citations": [
+            "docs/specs/pages/case-agents/00_SDD_case_agents.md#L25"
+          ]
+        },
+        {
+          "text": "O que medir, e o que esta proposta ainda não prova\nUma modernização não está concluída porque o código foi reescrito. Os indicadores\nabaixo precisam de definição operacional, linha de base e período de observação; mais\ndocumentos ou testes não provam, sozinhos, que o sistema ficou mais sustentável. ",
+          "citations": [
+            "src/especificacao-conversacional.html#L1132"
+          ]
+        },
+        {
+          "text": "Data: 2026-10-04. Alvo: WCAG 2.2 AA, perfil Standard. Commit base: `1960d55` (árvore limpa fora de `.repowise/`).",
+          "citations": [
+            "docs/specs/a11y-first/verificacao-independente-fase7.md#L4"
+          ]
+        },
+        {
+          "text": "a enquadra, qual Knowledge ela alimenta — internalizando que cada execução deveria deixar a organização",
+          "citations": [
+            "docs/specs/pages/engenharia-confianca/02_jornada_de_aprendizagem.md#L287"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "GS-ABS-003",
+      "outcome": "answered",
+      "required": [],
+      "forbidden": [
+        "nome de qualquer produto vetorial",
+        "afirmar que há produção"
+      ],
+      "claims": [
+        {
+          "text": "| **Banco vetorial dedicado** | volume vetorial muito alto e latência crítica | metadados, permissões e busca lexical tendem a ficar em outro sistema |",
+          "citations": [
+            "docs/references/digital-workplace-agentico/03_pilares/enterprise_search_rag_e_knowledge_graphs.md#L132"
+          ]
+        },
+        {
+          "text": "Banco vetorial sem metadados\nComo aparece\nchunks e embeddings sem permissão, vigência, aplicabilidade ou origem.\nPor que é problema\nimpossível filtrar por público ou permissão no índice; o filtro acaba aplicado depois — ou delegado ao modelo.\nComo detectar\no schema do índice tem só id, texto e vetor",
+          "citations": [
+            "src/digital-workplace-agentico.html#L1807"
+          ]
+        },
+        {
+          "text": "**Como aparece:** \"temos um banco vetorial, então temos uma base de conhecimento\".",
+          "citations": [
+            "docs/references/digital-workplace-agentico/05_decisao/anti_patterns.md#L139"
+          ]
+        },
+        {
+          "text": "##### Banco vetorial sem metadados",
+          "citations": [
+            "public/digital-workplace-agentico.md#L1192"
+          ]
+        },
+        {
+          "text": "### Exemplo prático: configurando um Knowledge para o contexto BUPJ",
+          "citations": [
+            "docs/specs/pages/devin/03_spec_site_devin_vibe_coding.md#L715"
+          ]
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "peak_rss_kib": 94080
+  }
+}

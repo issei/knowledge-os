@@ -77,7 +77,7 @@ def fts_query(text: str) -> str:
 
 def search(home: Path, query: str, *, repo: str | None = None, commit: str | None = None, k: int = 10,
            path_glob: str | None = None, kinds: list[str] | None = None,
-           include_generated: bool = False) -> SearchResult:
+           include_generated: bool = False, weights: tuple[float, float, float] = COLUMN_WEIGHTS) -> SearchResult:
     started = time.perf_counter()
     expression = fts_query(query)
     if not expression:
@@ -92,14 +92,15 @@ def search(home: Path, query: str, *, repo: str | None = None, commit: str | Non
         revisions = _revisions(conn, repo, commit)
         fingerprints = sorted({registry.profile_for(m).fingerprint for m in _media_types(conn, revisions)
                                if registry.profile_for(m) is not None})
-        hits, total = _query(conn, expression, revisions, fingerprints, k, path_glob, kinds, include_generated)
+        hits, total = _query(conn, expression, revisions, fingerprints, k, path_glob, kinds, include_generated,
+                             weights)
         stale = _stale_versions(conn, revisions, fingerprints)
     finally:
         conn.close()
     return SearchResult(
         revisions=[{"repo": r, "commit_oid": c} for _, r, c in revisions],
         results=hits,
-        diagnostics={"parsed_query": expression, "total_hits": total, "column_weights": list(COLUMN_WEIGHTS),
+        diagnostics={"parsed_query": expression, "total_hits": total, "column_weights": list(weights),
                      "stale_versions": stale,
                      "latency_ms": round((time.perf_counter() - started) * 1000, 1)},
     )
@@ -151,7 +152,7 @@ def _media_types(conn, revisions) -> set[str]:
     return {row[0] for row in conn.execute(sql, ids)}
 
 
-def _query(conn, expression, revisions, fingerprints, k, path_glob, kinds, include_generated):
+def _query(conn, expression, revisions, fingerprints, k, path_glob, kinds, include_generated, weights):
     rev_ids = [r[0] for r in revisions]
     where = [f"m.revision_id IN ({','.join('?' * len(rev_ids))})",
              f"p.profile_fingerprint IN ({','.join('?' * len(fingerprints))})"]
@@ -164,7 +165,7 @@ def _query(conn, expression, revisions, fingerprints, k, path_glob, kinds, inclu
     if kinds:
         where.append(f"a.artifact_kind IN ({','.join('?' * len(kinds))})")
         params += list(kinds)
-    w = ", ".join(str(x) for x in COLUMN_WEIGHTS)
+    w = ", ".join(str(float(x)) for x in weights)
     base = (
         " FROM fragment_fts x JOIN fragment f ON f.fragment_id = x.rowid"
         " JOIN processing_profile p ON p.profile_id = f.profile_id"
