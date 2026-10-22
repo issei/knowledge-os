@@ -5,6 +5,7 @@ Knowledge OS Enterprise: recuperação de conhecimento técnico a partir de docu
 - Especificação (Fase 0): [`docs/fase-0/`](docs/fase-0/README.md)
 - Decisões de arquitetura: [`docs/fase-0/05-adrs.md`](docs/fase-0/05-adrs.md)
 - Backlog: [`docs/fase-0/08-backlog.md`](docs/fase-0/08-backlog.md)
+- CI/CD, merge automático e entrega: [`docs/ci-cd.md`](docs/ci-cd.md)
 
 ## Estado
 

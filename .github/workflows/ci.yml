@@ -1,0 +1,144 @@
+# CI do Knowledge OS. Descrição completa em docs/ci-cd.md.
+#
+# Em todo PR: classifica a mudança, roda só o necessário em paralelo e, se tudo
+# passar, faz o merge automático (squash) na main. Se a mudança tocou o sistema,
+# chama o release, que só publica quando a versão do pyproject.toml ainda não
+# tem tag.
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: Classificar mudanças
+    runs-on: ubuntu-latest
+    outputs:
+      system: ${{ steps.classify.outputs.system }}
+      docs: ${{ steps.classify.outputs.docs }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: classify
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            python3 scripts/ci/classify_changes.py "$BASE" "$HEAD"
+          else
+            # Push na main e execução manual: roda tudo.
+            echo "system=true" >> "$GITHUB_OUTPUT"
+            echo "docs=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  docs:
+    name: Documentação
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/ci/check_docs.py
+
+  build:
+    name: Build do pacote
+    needs: changes
+    if: needs.changes.outputs.system == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m compileall -q src tests scripts
+      - run: python -m pip wheel . --no-deps -w dist
+      - name: Wheel contém o DDL
+        run: python -m zipfile -l dist/*.whl | grep -E 'kos/store/(index|audit)\.sql'
+
+  tests:
+    name: Testes ${{ matrix.suite }} (py${{ matrix.python }})
+    needs: changes
+    if: needs.changes.outputs.system == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+        suite: [unit, contract]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -c "import sqlite3; print('SQLite', sqlite3.sqlite_version)"
+      - run: python -m unittest discover -s tests/${{ matrix.suite }} -t . -v
+        env:
+          PYTHONPATH: src
+
+  ci-ok:
+    name: CI ok
+    needs: [changes, docs, build, tests]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Todos os jobs necessários passaram
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          echo "$RESULTS"
+          python3 - <<'PY'
+          import json, os, sys
+          needs = json.loads(os.environ["RESULTS"])
+          bad = {k: v["result"] for k, v in needs.items() if v["result"] not in ("success", "skipped")}
+          if needs["changes"]["result"] != "success":
+              bad["changes"] = needs["changes"]["result"]
+          print("falhas:", bad or "nenhuma")
+          sys.exit(1 if bad else 0)
+          PY
+
+  automerge:
+    name: Merge automático
+    needs: [changes, ci-ok]
+    if: >-
+      needs.ci-ok.result == 'success' &&
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Squash merge na main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        # --match-head-commit impede o merge se alguém empurrou um commit novo
+        # depois que esta execução começou.
+        run: gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" --squash --match-head-commit "$HEAD_SHA"
+
+  release:
+    name: Entrega
+    needs: [changes, automerge]
+    if: needs.automerge.result == 'success' && needs.changes.outputs.system == 'true'
+    permissions:
+      contents: write
+    uses: ./.github/workflows/release.yml
