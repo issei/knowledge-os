@@ -85,3 +85,9 @@ As marcadas em negrito são as que mais mudam o desenho.
 | Q-05 | HTML entra no MVP | ADR-kos-003 item 5 deixa de ser aberto. BL-22 passa para dentro do caminho vertical (BL-08 depende dele). GS-SPEC-003 e GS-CONF-002 deixam de ser condicionais. A tensão do achado 6 (§2) está resolvida. |
 
 Os ADR-kos-001..008 foram **aceitos** por Issei em 2026-10-22 (BL-00 concluído).
+
+## 5. Registro da implementação
+
+| Item | Decisão ou medição |
+|---|---|
+| BL-05 parser Markdown | `markdown-it-py` 3.x (preset CommonMark + tabelas). Motivo: expõe o mapa de linhas de cada bloco, o que permite recortar fragmentos por limites de bloco e calcular bytes a partir das linhas. Medição em `mauricio-site@73570bb`: 413 arquivos `.md` elegíveis, 6.622 fragmentos, **0 divergentes** em `normalize(recorte) == texto` (TC-PRS-01), 0 falhas de decodificação. Script: `scripts/dev/check_md_offsets.py`. |

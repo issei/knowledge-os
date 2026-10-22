@@ -9,11 +9,11 @@ Knowledge OS Enterprise: recuperação de conhecimento técnico a partir de docu
 
 ## Estado
 
-Fase 1 em andamento. Pronto: BL-01 (`kos init`), BL-02 (repositórios-fixture para testes) e BL-03 (descoberta, `kos discover`).
+Fase 1 em andamento. Pronto: BL-01 (`kos init`), BL-02 (repositórios-fixture para testes), BL-03 (descoberta, `kos discover`), BL-04 (perfis de processamento e chave de fragmento) e BL-05 (normalizador e parser Markdown com offsets exatos).
 
 ## Uso
 
-Requer Python ≥ 3.11 com SQLite compilado com FTS5. Não há dependências externas.
+Requer Python ≥ 3.11 com SQLite compilado com FTS5. A única dependência externa é `markdown-it-py` (parser Markdown com mapa de linhas, escolhido em BL-05 pelo teste de offsets exatos); instale com `pip install -e .`.
 
 ```sh
 PYTHONPATH=src python -m kos init            # cria ./.kos/index.sqlite e ./.kos/audit.sqlite
@@ -31,6 +31,12 @@ O diretório dos bancos é `--home`, ou `$KOS_HOME`, ou `./.kos`. `index.sqlite`
 
 ```sh
 PYTHONPATH=src python -m unittest discover -s tests -t .
+```
+
+Para conferir os offsets do parser Markdown num corpus real (TC-PRS-01):
+
+```sh
+PYTHONPATH=src python scripts/dev/check_md_offsets.py ../mauricio-site --policy policies/mauricio-site.json
 ```
 
 Os testes também conferem que o DDL em `src/kos/store/*.sql` é o mesmo da especificação e que o catálogo de erros é o de CTR-10.
