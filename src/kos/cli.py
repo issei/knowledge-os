@@ -15,8 +15,8 @@ import sys
 from pathlib import Path
 
 from kos import __version__
-from kos import discovery
-from kos.errors import EXIT_EXECUTION, EXIT_OK, EXIT_USAGE, KosError
+from kos import discovery, ingest
+from kos.errors import EXIT_EXECUTION, EXIT_OK, EXIT_PARTIAL, EXIT_USAGE, KosError
 from kos.store import schema
 
 DEFAULT_HOME = ".kos"
@@ -50,6 +50,18 @@ def build_parser() -> argparse.ArgumentParser:
     disc.add_argument("--policy", help="arquivo JSON da política (padrão: política empacotada)")
     disc.add_argument("--json", action="store_true", help="saída JSON kos.discover.v1")
     disc.set_defaults(handler=_cmd_discover)
+
+    ing = sub.add_parser("ingest", help="indexa uma revisão do repositório (CTR-03)")
+    ing.add_argument("repo", help="caminho do repositório Git")
+    ing.add_argument("--rev", default="HEAD", help="revisão (padrão: HEAD)")
+    ing.add_argument("--full", action="store_true", required=True,
+                     help="ingestão completa da revisão (a incremental vem no BL-16)")
+    ing.add_argument("--name", help="nome lógico do repositório (padrão: nome da pasta)")
+    ing.add_argument("--policy", help="arquivo JSON da política (padrão: política empacotada)")
+    ing.add_argument("--home", default=os.environ.get("KOS_HOME", DEFAULT_HOME),
+                     help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
+    ing.add_argument("--json", action="store_true", help="saída JSON kos.ingest.v1")
+    ing.set_defaults(handler=_cmd_ingest)
     return parser
 
 
@@ -106,6 +118,26 @@ def _cmd_discover(args: argparse.Namespace) -> int:
             print(f"{f.path_text}\t{status}")
         print(f"{commit}: {len(files)} arquivo(s), {len(eligible)} elegível(is)", file=sys.stderr)
     return EXIT_OK
+
+
+def _cmd_ingest(args: argparse.Namespace) -> int:
+    policy = discovery.Policy.load(Path(args.policy)) if args.policy else discovery.Policy.default()
+    result = ingest.ingest_full(Path(args.home), Path(args.repo), rev=args.rev, policy=policy,
+                                repo_name=args.name)
+    if args.json:
+        print(json.dumps({
+            "schema": "kos.ingest.v1", "run_uuid": result.run_uuid, "mode": "full",
+            "repo": result.repo_name, "commit_oid": result.commit_oid, "status": result.status,
+            "policy_sha256": policy.sha256, "counts": result.counts, "errors": result.errors,
+        }, ensure_ascii=False, indent=2))
+    else:
+        for e in result.errors:
+            print(f"{e['severity']}: {e['path']}: {e['code']}: {e['message']}", file=sys.stderr)
+        c = result.counts
+        print(f"{result.repo_name}@{result.commit_oid}: {result.status}; {c['eligible']} elegível(is),"
+              f" {c['processed']} processado(s), {c['reused']} reaproveitado(s), {c['failed']} com falha,"
+              f" {c['fragments']} fragmento(s) novo(s)")
+    return EXIT_PARTIAL if result.status == "partial" else EXIT_OK
 
 
 def _emit_error(err: KosError, *, as_json: bool) -> None:

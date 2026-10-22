@@ -13,6 +13,11 @@ BASE = Profile("md-native", "markdown-it-py", "3.0.0", "1", {"max_section_lines"
 LOC = Locator("text", start_byte=0, end_byte=10, start_line=1, end_line=2)
 
 
+
+def _key(blob_oid, fingerprint, locator):
+    return fragment_key("repo", b"docs/x.md", blob_oid, fingerprint, locator)
+
+
 class ProfileTest(unittest.TestCase):
     def test_fingerprint_is_stable_and_order_independent(self):
         same = Profile("md-native", "markdown-it-py", "3.0.0", "1", {"max_section_lines": 60})
@@ -28,18 +33,23 @@ class ProfileTest(unittest.TestCase):
             Profile("md-native", "markdown-it-py", "3.0.0", "2", {"max_section_lines": 60}),
             Profile("md-native", "markdown-it-py", "3.0.0", "1", {"max_section_lines": 60}, "g1"),
         ]
-        base_key = fragment_key("a" * 40, BASE.fingerprint, LOC)
+        base_key = _key("a" * 40, BASE.fingerprint, LOC)
         for v in variants:
             with self.subTest(v=v):
                 self.assertNotEqual(v.fingerprint, BASE.fingerprint)
-                self.assertNotEqual(fragment_key("a" * 40, v.fingerprint, LOC), base_key)
+                self.assertNotEqual(_key("a" * 40, v.fingerprint, LOC), base_key)
+
+    def test_fragment_key_depende_do_repositorio_e_do_caminho(self):
+        k = _key("a" * 40, BASE.fingerprint, LOC)
+        self.assertNotEqual(k, fragment_key("outro", b"docs/x.md", "a" * 40, BASE.fingerprint, LOC))
+        self.assertNotEqual(k, fragment_key("repo", b"docs/y.md", "a" * 40, BASE.fingerprint, LOC))
 
     def test_fragment_key_depends_on_blob_and_locator(self):
-        k = fragment_key("a" * 40, BASE.fingerprint, LOC)
-        self.assertEqual(k, fragment_key("a" * 40, BASE.fingerprint,
+        k = _key("a" * 40, BASE.fingerprint, LOC)
+        self.assertEqual(k, _key("a" * 40, BASE.fingerprint,
                                          Locator("text", start_byte=0, end_byte=10, start_line=1, end_line=2)))
-        self.assertNotEqual(k, fragment_key("b" * 40, BASE.fingerprint, LOC))
-        self.assertNotEqual(k, fragment_key("a" * 40, BASE.fingerprint,
+        self.assertNotEqual(k, _key("b" * 40, BASE.fingerprint, LOC))
+        self.assertNotEqual(k, _key("a" * 40, BASE.fingerprint,
                                             Locator("text", start_byte=0, end_byte=11, start_line=1, end_line=2)))
         self.assertRegex(k, r"^[0-9a-f]{64}$")
 

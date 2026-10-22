@@ -18,7 +18,7 @@ from kos.discovery.glob import matches
 from kos.discovery.policy import Policy
 from kos.errors import KosError
 
-__all__ = ["DiscoveredFile", "Policy", "discover", "resolve_commit"]
+__all__ = ["DiscoveredFile", "Policy", "discover", "read_blobs", "resolve_commit"]
 
 LFS_PREFIX = b"version https://git-lfs.github.com/spec/v1"
 BINARY_SNIFF_BYTES = 8000
@@ -103,20 +103,28 @@ def _classify_kind(path_text: str, generated: bool, policy: Policy) -> tuple[str
     return "other", "kind:default"
 
 
-def _sniff_heads(repo: Path, oids: list[str]) -> dict[str, bytes]:
-    """Primeiros bytes de cada blob, numa única chamada `git cat-file --batch`."""
+def read_blobs(repo: Path, oids: list[str]) -> dict[str, bytes]:
+    """Conteúdo completo de cada blob, numa única chamada `git cat-file --batch`."""
     if not oids:
         return {}
     unique = sorted(set(oids))
     out = _git(repo, "cat-file", "--batch", input=("\n".join(unique) + "\n").encode())
-    heads, pos = {}, 0
+    blobs, pos = {}, 0
     for _ in unique:
         header_end = out.index(b"\n", pos)
-        oid, _type, size = out[pos:header_end].decode().split(" ")
+        header = out[pos:header_end].decode().split(" ")
+        if len(header) != 3:  # "<oid> missing"
+            raise KosError("E_BLOB_UNREADABLE", f"blob {header[0]} não pôde ser lido")
+        oid, _type, size = header
         start = header_end + 1
-        heads[oid] = out[start:start + min(int(size), BINARY_SNIFF_BYTES)]
+        blobs[oid] = out[start:start + int(size)]
         pos = start + int(size) + 1
-    return heads
+    return blobs
+
+
+def _sniff_heads(repo: Path, oids: list[str]) -> dict[str, bytes]:
+    """Primeiros bytes de cada blob candidato."""
+    return {oid: data[:BINARY_SNIFF_BYTES] for oid, data in read_blobs(repo, oids).items()}
 
 
 def discover(repo: Path, rev: str, policy: Policy) -> tuple[str, list[DiscoveredFile]]:

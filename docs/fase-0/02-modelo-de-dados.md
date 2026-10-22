@@ -17,7 +17,7 @@ O DDL abaixo é **proposta de especificação**, não implementação. Foi escri
 |---|---|---|---|
 | **Lógica** (`artifact`) | "O arquivo `docs/x.md` do repositório R", independente de conteúdo. | `artifact_id` substituto + único `(repo_id, path_bytes)` | Nunca. Renomear cria outra identidade lógica; a ligação entre as duas é registrada em `artifact_lineage` como relação **inferida**. |
 | **Versão** (`artifact_version`) | Um conteúdo concreto daquele arquivo, endereçado pelo blob Git. | `version_id` substituto + único `(artifact_id, blob_oid)` | Quando o blob muda. Commits que não mexem no arquivo reaproveitam a mesma versão. |
-| **Fragmento** (`fragment`) | Uma unidade indexável extraída de uma versão por um perfil de processamento. | `fragment_key` = SHA-256 de `blob_oid ‖ profile_fingerprint ‖ locator_canônico` | Quando o conteúdo, o perfil (parser, versão, configuração) ou o recorte mudam. |
+| **Fragmento** (`fragment`) | Uma unidade indexável extraída de uma versão por um perfil de processamento. | `fragment_key` = SHA-256 de `repo_name ‖ path_bytes ‖ blob_oid ‖ profile_fingerprint ‖ locator_canônico` (repositório e caminho entram desde o BL-08: o mesmo blob pode estar em dois caminhos) | Quando o conteúdo, o perfil (parser, versão, configuração) ou o recorte mudam. |
 
 Consequências:
 
