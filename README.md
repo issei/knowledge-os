@@ -9,7 +9,7 @@ Knowledge OS Enterprise: recuperação de conhecimento técnico a partir de docu
 
 ## Estado
 
-Fase 1 em andamento. Pronto: BL-01 (`kos init`).
+Fase 1 em andamento. Pronto: BL-01 (`kos init`), BL-02 (repositórios-fixture para testes) e BL-03 (descoberta, `kos discover`).
 
 ## Uso
 
@@ -18,7 +18,10 @@ Requer Python ≥ 3.11 com SQLite compilado com FTS5. Não há dependências ext
 ```sh
 PYTHONPATH=src python -m kos init            # cria ./.kos/index.sqlite e ./.kos/audit.sqlite
 PYTHONPATH=src python -m kos init --json     # saída kos.init.v1
+PYTHONPATH=src python -m kos discover ../mauricio-site --policy policies/mauricio-site.json
 ```
+
+Políticas de elegibilidade ficam em `policies/` (a do corpus-alvo é `policies/mauricio-site.json`); sem `--policy`, vale a política empacotada em `src/kos/discovery/default_policy.json`.
 
 Ou instale em modo editável (`pip install -e .`) e use `kos init`.
 

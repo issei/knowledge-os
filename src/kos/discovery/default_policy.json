@@ -1,0 +1,31 @@
+{
+  "policy_id": "default",
+  "version": 1,
+  "include": ["**"],
+  "exclude": ["node_modules/**", "**/node_modules/**", "dist/**", "build/**", ".venv/**", "**/__pycache__/**"],
+  "max_bytes": 1000000,
+  "generated": [],
+  "kind_rules": [
+    {"pattern": "**/ADR-*.md", "kind": "adr"},
+    {"pattern": "**/adr/**", "kind": "adr"},
+    {"pattern": "tests/**", "kind": "test"},
+    {"pattern": "**/*.test.*", "kind": "test"},
+    {"pattern": "**/*.spec.*", "kind": "test"},
+    {"pattern": "**/test_*.py", "kind": "test"},
+    {"pattern": "docs/specs/**", "kind": "spec"},
+    {"pattern": "specs/**", "kind": "spec"},
+    {"pattern": "**/*.md", "kind": "doc"},
+    {"pattern": "**/*.html", "kind": "doc"},
+    {"pattern": "**/*.txt", "kind": "doc"},
+    {"pattern": "**/*.py", "kind": "code"},
+    {"pattern": "**/*.js", "kind": "code"},
+    {"pattern": "**/*.mjs", "kind": "code"},
+    {"pattern": "**/*.cjs", "kind": "code"},
+    {"pattern": "**/*.sh", "kind": "code"},
+    {"pattern": "**/*.css", "kind": "code"},
+    {"pattern": "**/*.yaml", "kind": "config"},
+    {"pattern": "**/*.yml", "kind": "config"},
+    {"pattern": "**/*.toml", "kind": "config"},
+    {"pattern": "**/*.json", "kind": "data"}
+  ]
+}

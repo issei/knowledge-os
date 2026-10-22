@@ -117,6 +117,7 @@ Prefixo `ADR-kos-NNN`, para não colidir com `docs/specs/14-adr/ADR-NNN` (LifeOS
 |---|---|
 | `kos init` | cria `index.sqlite` e `audit.sqlite` |
 | `kos repo add <nome> <caminho>` | registra repositório |
+| `kos discover <caminho> [--rev] [--policy]` | CTR-01 (diagnóstico da descoberta; acrescentado no BL-03) |
 | `kos ingest <nome> [--rev <commit>] [--full]` | CTR-01..04 |
 | `kos rebuild` | CTR-05 |
 | `kos gc` | CTR-04 inv. 5 |
