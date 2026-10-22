@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 from kos import __version__
-from kos import discovery, ingest, rebuild, search
+from kos import cite, discovery, ingest, rebuild, search
 from kos.errors import EXIT_EXECUTION, EXIT_OK, EXIT_PARTIAL, EXIT_USAGE, KosError
 from kos.store import schema
 
@@ -86,6 +86,17 @@ def build_parser() -> argparse.ArgumentParser:
                      help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
     sea.add_argument("--json", action="store_true", help="saída JSON kos.search.v1")
     sea.set_defaults(handler=_cmd_search)
+
+    cit = sub.add_parser("cite", help="monta citações verificadas contra o Git (CTR-07)")
+    cit.add_argument("fragment_key", nargs="+", help="chave(s) de fragmento, como as de `kos search`")
+    cit.add_argument("--rev", help="commit completo (padrão: a última revisão que contém o fragmento)")
+    cit.add_argument("--lines", metavar="A-B", help="sub-intervalo de linhas dentro do fragmento")
+    cit.add_argument("--repo", action="append", default=[], metavar="NOME=CAMINHO",
+                     help="onde está o clone (padrão: o caminho da última ingestão)")
+    cit.add_argument("--home", default=os.environ.get("KOS_HOME", DEFAULT_HOME),
+                     help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
+    cit.add_argument("--json", action="store_true", help="saída JSON kos.cite.v1")
+    cit.set_defaults(handler=_cmd_cite)
     return parser
 
 
@@ -204,6 +215,23 @@ def _cmd_search(args: argparse.Namespace) -> int:
         revs = ", ".join(f"{r['repo']}@{r['commit_oid'][:12]}" for r in result.revisions)
         d = result.diagnostics
         print(f"{d['total_hits']} resultado(s) em {revs}; {d['latency_ms']} ms", file=sys.stderr)
+    return EXIT_OK
+
+
+def _cmd_cite(args: argparse.Namespace) -> int:
+    repos = {k: Path(v) for k, v in (_split_arg(item, "=", "--repo") for item in args.repo)}
+    lines = None
+    if args.lines:
+        first, _, last = args.lines.partition("-")
+        if not first.isdigit() or not (last or first).isdigit():
+            raise SystemExit(f"kos: erro de uso: --lines espera A-B, recebeu {args.lines!r}")
+        lines = (int(first), int(last or first))
+    citations = cite.cite(Path(args.home), args.fragment_key, commit=args.rev, repos=repos, lines=lines)
+    if args.json:
+        print(json.dumps({"schema": "kos.cite.v1", "citations": [c.to_json() for c in citations]},
+                         ensure_ascii=False, indent=2))
+    else:
+        print("\n".join(c.human() for c in citations))
     return EXIT_OK
 
 

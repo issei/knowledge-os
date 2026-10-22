@@ -214,6 +214,14 @@ Formato humano canônico (CLI):
 - TC-CIT-05 Nenhuma citação em nenhum caso de teste tem `verification` ausente (propriedade).
 - TC-CIT-06 Commit abreviado em JSON é rejeitado pela validação de esquema.
 
+**Notas de implementação (BL-11)**
+- `kos cite KEY... [--rev COMMIT] [--lines A-B] [--repo NOME=CAMINHO] [--json]`; saída JSON `kos.cite.v1`, validada por `validate_citation` antes de sair (OIDs com 40 ou 64 hex, `verification` no vocabulário, `quoted_sha256` com 64 hex).
+- Sem `--rev`, a revisão é a da execução mais recente (`succeeded` ou `partial`) cujo manifesto contém a versão do fragmento; se nenhuma contém, `E_FRAGMENT_GONE`.
+- O repositório é localizado por `--repo` ou por `repository.origin_url`, que a ingestão grava como URI `file://` do clone. É só uma dica de localização, não identidade: a identidade continua sendo o nome do repositório.
+- Estados produzidos: `verified_exact` (recorte normalizado do blob relido tem o hash esperado), `verified_normalized` (HTML: o texto esperado é o visível, diferente do literal, e o hash confere) e `unverified` com nota (blob ilegível, repositório ausente ou hash divergente). `derived` não é produzido: toda citação relê o blob.
+- `--lines A-B` recorta um sub-intervalo que precisa caber nas linhas do fragmento; fora disso, ou em fragmento HTML (o texto visível não tem recorte literal por linha), `E_SUBRANGE_OUT_OF_BOUNDS`.
+- Inv. 6 ainda não é aplicada: arquivos gerados são marcados (`[gerado]` na forma humana, `is_generated` no JSON), mas não remapeados para a fonte, porque o índice não guarda a relação gerado → fonte. Fica para depois do B0.
+
 ---
 
 ## CTR-08 — Geração de respostas fundamentadas

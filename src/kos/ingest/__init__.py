@@ -115,6 +115,9 @@ def _start_run(conn, repo: Path, name: str, commit: str, policy: Policy, mode: s
         conn.execute("INSERT OR IGNORE INTO repository(name, object_format, registered_at)"
                      " VALUES (?, ?, ?)", (name, object_format, _now()))
         repo_id = conn.execute("SELECT repo_id FROM repository WHERE name = ?", (name,)).fetchone()[0]
+        # Onde o clone estava na última ingestão: só um palpite para reler blobs (kos cite),
+        # nunca identidade.
+        conn.execute("UPDATE repository SET origin_url = ? WHERE repo_id = ?", (repo.resolve().as_uri(), repo_id))
         conn.execute("INSERT OR IGNORE INTO source_revision(repo_id, commit_oid, tree_oid, committed_at)"
                      " VALUES (?, ?, ?, ?)", (repo_id, commit, tree_oid, committed_at))
         revision_id = conn.execute("SELECT revision_id FROM source_revision WHERE repo_id = ?"
