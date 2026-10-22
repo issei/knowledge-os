@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 from kos import __version__
-from kos import discovery, ingest
+from kos import discovery, ingest, rebuild
 from kos.errors import EXIT_EXECUTION, EXIT_OK, EXIT_PARTIAL, EXIT_USAGE, KosError
 from kos.store import schema
 
@@ -62,6 +62,17 @@ def build_parser() -> argparse.ArgumentParser:
                      help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
     ing.add_argument("--json", action="store_true", help="saída JSON kos.ingest.v1")
     ing.set_defaults(handler=_cmd_ingest)
+
+    reb = sub.add_parser("rebuild", help="reconstrói index.sqlite a partir do Git (CTR-05)")
+    reb.add_argument("--repo", action="append", required=True, metavar="NOME=CAMINHO",
+                     help="repositório e o caminho do clone local (repetível)")
+    reb.add_argument("--rev", action="append", metavar="NOME@COMMIT",
+                     help="revisão a reconstruir (repetível; padrão: as retidas no índice atual)")
+    reb.add_argument("--policy", help="arquivo JSON da política (padrão: política empacotada)")
+    reb.add_argument("--home", default=os.environ.get("KOS_HOME", DEFAULT_HOME),
+                     help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
+    reb.add_argument("--json", action="store_true", help="saída JSON kos.rebuild.v1")
+    reb.set_defaults(handler=_cmd_rebuild)
     return parser
 
 
@@ -138,6 +149,36 @@ def _cmd_ingest(args: argparse.Namespace) -> int:
               f" {c['processed']} processado(s), {c['reused']} reaproveitado(s), {c['failed']} com falha,"
               f" {c['fragments']} fragmento(s) novo(s)")
     return EXIT_PARTIAL if result.status == "partial" else EXIT_OK
+
+
+def _cmd_rebuild(args: argparse.Namespace) -> int:
+    repos = dict(_split_arg(item, "=", "--repo") for item in args.repo)
+    revisions = [_split_arg(item, "@", "--rev") for item in args.rev] if args.rev else None
+    policy = discovery.Policy.load(Path(args.policy)) if args.policy else discovery.Policy.default()
+    result = rebuild.rebuild(Path(args.home), {k: Path(v) for k, v in repos.items()},
+                             policy=policy, revisions=revisions)
+    if args.json:
+        print(json.dumps({
+            "schema": "kos.rebuild.v1", "status": result.status, "policy_sha256": policy.sha256,
+            "revisions": result.revisions, "missing": result.missing,
+            "old_digest": result.old_digest, "new_digest": result.new_digest,
+            "fragments_added": result.fragments_added, "fragments_removed": result.fragments_removed,
+        }, ensure_ascii=False, indent=2))
+    else:
+        for m in result.missing:
+            print(f"erro: {m['repo']}@{m['commit_oid']}: {m['code']}: {m['message']}", file=sys.stderr)
+        for r in result.revisions:
+            print(f"{r['repo']}@{r['commit_oid']}: {r['status']}")
+        same = "igual ao anterior" if result.old_digest == result.new_digest else "diferente do anterior"
+        print(f"rebuild {result.status}; conteúdo lógico {same} ({result.new_digest[:12]})")
+    return EXIT_PARTIAL if result.status == "partial" else EXIT_OK
+
+
+def _split_arg(value: str, sep: str, flag: str) -> tuple[str, str]:
+    left, found, right = value.partition(sep)
+    if not found or not left or not right:
+        raise SystemExit(f"kos: erro de uso: {flag} espera NOME{sep}VALOR, recebeu {value!r}")
+    return left, right
 
 
 def _emit_error(err: KosError, *, as_json: bool) -> None:

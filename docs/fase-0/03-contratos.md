@@ -146,6 +146,8 @@ Verification = verified_exact | verified_normalized | derived | unverified
 4. Se o rebuild falhar, o índice antigo continua em uso.
 5. O relatório lista fragmentos adicionados/removidos por perfil quando a versão de parser mudou.
 
+**Implementação (BL-09).** `kos rebuild --repo NOME=CAMINHO [--rev NOME@COMMIT ...] [--policy]`. Sem `--rev`, as revisões são as retidas no índice antigo com alguma ingestão `succeeded` ou `partial`; sem índice e sem `--rev`, falha com `E_NO_INDEXED_REVISION`. O índice novo é montado em `home/.rebuild-<pid>/` e troca o antigo com `os.replace`, depois de os dois saírem do modo WAL. Um índice antigo ilegível ou de outro esquema é substituído (Q-07). O "dump lógico" de inv. 2 é `kos.store.dump.logical_dump`: todas as tabelas derivadas, com referências trocadas por identidades estáveis, sem `ingest_run` (que carrega carimbos de tempo e o modo). Commit ou repositório ausente fica só no relatório (`missing`), porque `processing_error` exige uma execução. Como o perfil HTML inclui a versão do Python, índices construídos com interpretadores diferentes têm dumps diferentes, de propósito. No Windows, a troca falha se outro processo estiver com o índice aberto.
+
 **Falhas esperadas:** `E_COMMIT_NOT_FOUND` (commit retido sumiu do Git, ex.: após force-push): o rebuild segue com as demais revisões e marca a ausente; `E_DISK_FULL`.
 
 **Testes de contrato**
