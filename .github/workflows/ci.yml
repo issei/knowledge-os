@@ -120,7 +120,11 @@ jobs:
   automerge:
     name: Merge automático
     needs: [changes, ci-ok]
+    # Sem !cancelled(), o GitHub pula este job quando algum job anterior da
+    # cadeia foi pulado (build e tests num PR só de documentação), mesmo com
+    # ci-ok verde.
     if: >-
+      !cancelled() &&
       needs.ci-ok.result == 'success' &&
       github.event_name == 'pull_request' &&
       github.event.pull_request.draft == false &&
@@ -143,7 +147,7 @@ jobs:
   release:
     name: Entrega
     needs: [changes, automerge]
-    if: needs.automerge.result == 'success' && needs.changes.outputs.system == 'true'
+    if: "!cancelled() && needs.automerge.result == 'success' && needs.changes.outputs.system == 'true'"
     permissions:
       contents: write
     uses: ./.github/workflows/release.yml

@@ -42,5 +42,15 @@ class CheckDocsTest(unittest.TestCase):
         self.assertEqual(check_docs.broken_links(ROOT), [])
 
 
+class WorkflowTest(unittest.TestCase):
+    def test_jobs_after_skipped_jobs_are_not_skipped(self):
+        # Um PR só de documentação pula build e tests. Sem !cancelled(), o GitHub
+        # também pula o merge automático (aconteceu no PR #14).
+        import yaml
+        jobs = yaml.safe_load((ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8"))["jobs"]
+        for name in ("automerge", "release"):
+            self.assertTrue(jobs[name]["if"].lstrip().startswith("!cancelled()"), name)
+
+
 if __name__ == "__main__":
     unittest.main()

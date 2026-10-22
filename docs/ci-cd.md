@@ -11,6 +11,7 @@ PR aberto/atualizado
        ├─ build  ── compileall + wheel, confere o DDL dentro do wheel       [se mudou sistema]
        └─ tests  ── matriz py3.11/3.12/3.13 × unit/contract (6 jobs)        [se mudou sistema]
   └─ ci-ok ── passa se todo job necessário passou ou foi pulado
+       (automerge e release usam `!cancelled()`: sem isso o GitHub os pula quando build e tests foram pulados)
   └─ automerge ── squash merge na main (só PR do próprio repositório, fora de rascunho)
   └─ release ── só se a mudança tocou o sistema: chama release.yml
 ```
