@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 from kos import __version__
-from kos import answer, audit, bench, cite, discovery, ingest, rebuild
+from kos import answer, audit, bench, cite, discovery, ingest, mcp, rebuild
 from kos.errors import EXIT_ABSTAINED, EXIT_EXECUTION, EXIT_OK, EXIT_PARTIAL, EXIT_USAGE, KosError
 from kos.store import schema
 
@@ -130,6 +130,13 @@ def build_parser() -> argparse.ArgumentParser:
                       help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
     brun.add_argument("--json", action="store_true", help="imprime o relatório kos.bench.v1")
     brun.set_defaults(handler=_cmd_bench_run)
+
+    srv = sub.add_parser("mcp", help="servidor MCP local, só leitura, por stdio (ADR-kos-006)")
+    srv.add_argument("--clone", action="append", default=[], metavar="NOME=CAMINHO",
+                     help="clone que o servidor pode ler para verificar citações (repetível)")
+    srv.add_argument("--home", default=os.environ.get("KOS_HOME", DEFAULT_HOME),
+                     help="diretório dos bancos (padrão: $KOS_HOME ou ./.kos)")
+    srv.set_defaults(handler=_cmd_mcp)
 
     aud = sub.add_parser("audit", help="consulta a auditoria (CTR-10)")
     aud_sub = aud.add_subparsers(dest="audit_command", required=True, parser_class=_Parser)
@@ -342,6 +349,13 @@ def _cmd_bench_run(args: argparse.Namespace) -> int:
         print(text)
     else:
         print(bench.summary(report))
+    return EXIT_OK
+
+
+def _cmd_mcp(args: argparse.Namespace) -> int:
+    clones = {k: Path(v) for k, v in (_split_arg(item, "=", "--clone") for item in args.clone)}
+    print(f"kos mcp {__version__}: stdio, home {Path(args.home).resolve()}", file=sys.stderr)
+    mcp.serve(mcp.Server(Path(args.home), clones))
     return EXIT_OK
 
 
