@@ -1,19 +1,19 @@
 ---
 id: KOS-F0-ADR
 titulo: Fase 0E — ADRs preliminares
-status: propostos (nenhum aceito)
+status: aceitos (Issei, 2026-10-22)
 data: 2026-10-21
 ---
 
 # Fase 0E — ADRs preliminares
 
-Prefixo `ADR-kos-NNN`, para não colidir com `docs/specs/14-adr/ADR-NNN` (LifeOS) nem `ADR-eai/te/ap-*` (páginas). Todos estão em **Proposto**; viram **Aceito** com a aprovação de Issei antes da Fase 1. Formato herdado de `docs/decisions/ADR-eai-002-*.md`, acrescido de riscos, evidências necessárias e condição de revisão.
+Prefixo `ADR-kos-NNN`, para não colidir com `docs/specs/14-adr/ADR-NNN` (LifeOS) nem `ADR-eai/te/ap-*` (páginas). Todos foram **aceitos** por Issei em 2026-10-22 (BL-00). Formato herdado de `docs/decisions/ADR-eai-002-*.md`, acrescido de riscos, evidências necessárias e condição de revisão.
 
 ---
 
 ## ADR-kos-001 — Fonte de verdade e reconstrução
 
-- **Status:** Proposto · **Requisitos:** REQ-01, REQ-12, RNF-02 · **Contratos:** CTR-01, CTR-05, CTR-10
+- **Status:** Aceito (Issei, 2026-10-22) · **Requisitos:** REQ-01, REQ-12, RNF-02 · **Contratos:** CTR-01, CTR-05, CTR-10
 
 **Contexto.** O valor do sistema está em respostas rastreáveis. Se o índice puder divergir silenciosamente do Git, a rastreabilidade se perde. A arquitetura provisória já fixa Git como fonte de verdade.
 
@@ -37,7 +37,7 @@ Prefixo `ADR-kos-NNN`, para não colidir com `docs/specs/14-adr/ADR-NNN` (LifeOS
 
 ## ADR-kos-002 — SQLite/FTS5 como busca inicial
 
-- **Status:** Proposto · **Requisitos:** REQ-06, RNF-03, RNF-06 · **Contratos:** CTR-06
+- **Status:** Aceito (Issei, 2026-10-22) · **Requisitos:** REQ-06, RNF-03, RNF-06 · **Contratos:** CTR-06
 
 **Contexto.** O MVP precisa de busca textual com metadados e proveniência, offline, sem serviço residente. O ambiente inspecionado já tem SQLite 3.45.1 com FTS5. O repositório já usa BM25 em memória via `okf search` para a memória OKF.
 
@@ -57,7 +57,7 @@ Prefixo `ADR-kos-NNN`, para não colidir com `docs/specs/14-adr/ADR-NNN` (LifeOS
 
 ## ADR-kos-003 — Estratégia de parsing
 
-- **Status:** Proposto · **Requisitos:** REQ-03, RNF-05 · **Contratos:** CTR-02
+- **Status:** Aceito (Issei, 2026-10-22) · **Requisitos:** REQ-03, RNF-05 · **Contratos:** CTR-02
 
 **Contexto.** O corpus tem Markdown, YAML, JSON, código e texto; documentos complexos (PDF/DOCX) são raros em C0 e desconhecidos em C1. A citação verificável exige offsets confiáveis no original.
 
@@ -82,7 +82,7 @@ Prefixo `ADR-kos-NNN`, para não colidir com `docs/specs/14-adr/ADR-NNN` (LifeOS
 
 ## ADR-kos-004 — Proveniência e formato das citações
 
-- **Status:** Proposto · **Requisitos:** REQ-07, REQ-08, REQ-11 · **Contratos:** CTR-07, CTR-08
+- **Status:** Aceito (Issei, 2026-10-22) · **Requisitos:** REQ-07, REQ-08, REQ-11 · **Contratos:** CTR-07, CTR-08
 
 **Contexto.** O pedido proíbe apresentar localização inferida como verificada. Formatos têm estruturas diferentes (linhas, ponteiros, páginas, símbolos).
 
@@ -107,7 +107,7 @@ Prefixo `ADR-kos-NNN`, para não colidir com `docs/specs/14-adr/ADR-NNN` (LifeOS
 
 ## ADR-kos-005 — Interface CLI
 
-- **Status:** Proposto · **Requisitos:** REQ-13, RNF-03 · **Contratos:** CTR-01..10
+- **Status:** Aceito (Issei, 2026-10-22) · **Requisitos:** REQ-13, RNF-03 · **Contratos:** CTR-01..10
 
 **Contexto.** A CLI é a interface primária aprovada. O benchmark, os testes e o futuro MCP precisam do mesmo núcleo.
 
@@ -142,7 +142,7 @@ Toda saída tem `--json` com esquema versionado (`schema: "kos.<comando>.v1"`). 
 
 ## ADR-kos-006 — Integração MCP de leitura
 
-- **Status:** Proposto · **Requisitos:** REQ-14, RNF-01 · **Contratos:** CTR-06, CTR-07, CTR-09
+- **Status:** Aceito (Issei, 2026-10-22) · **Requisitos:** REQ-14, RNF-01 · **Contratos:** CTR-06, CTR-07, CTR-09
 
 **Contexto.** A integração MCP está planejada. Um servidor MCP expõe o corpus a clientes de agente; o risco é transformar recuperação em canal de exfiltração ou de escrita.
 
@@ -162,7 +162,7 @@ Toda saída tem `--json` com esquema versionado (`schema: "kos.<comando>.v1"`). 
 
 ## ADR-kos-007 — Uso opcional de LLM
 
-- **Status:** Proposto · **Requisitos:** REQ-09, REQ-10, RNF-01 · **Contratos:** CTR-08, CTR-09
+- **Status:** Aceito (Issei, 2026-10-22) · **Requisitos:** REQ-09, REQ-10, RNF-01 · **Contratos:** CTR-08, CTR-09
 
 **Contexto.** Respostas extrativas são verificáveis mas pouco fluentes. Um LLM pode sintetizar, mas cria risco de afirmações sem suporte e de envio de conteúdo privado a terceiros.
 
@@ -187,7 +187,7 @@ Toda saída tem `--json` com esquema versionado (`schema: "kos.<comando>.v1"`). 
 
 ## ADR-kos-008 — Exclusão temporária de embeddings e grafos
 
-- **Status:** Proposto · **Requisitos:** RNF-06 · **Diverge de:** `src/knowledge-os-presentation.html:1068,1112,1138,1151` e `public/knowledge-os-presentation.md` (DIV-01..05)
+- **Status:** Aceito (Issei, 2026-10-22) · **Requisitos:** RNF-06 · **Diverge de:** `src/knowledge-os-presentation.html:1068,1112,1138,1151` e `public/knowledge-os-presentation.md` (DIV-01..05)
 
 **Contexto.** A página pública do Knowledge OS descreve GraphRAG, busca híbrida vetor + BM25 + grafo, ontologia JSON-LD/SHACL e agentes via LangGraph/Mastra/CrewAI. Nada disso existe implementado. A arquitetura provisória aprovada exclui esses componentes do núcleo inicial.
 

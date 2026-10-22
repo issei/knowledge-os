@@ -84,4 +84,4 @@ As marcadas em negrito são as que mais mudam o desenho.
 | Q-02 | Python | Módulos candidatos viram o pacote Python `kos`. Bibliotecas concretas (parser Markdown, YAML e JSON com posições, bindings do Tree-sitter) são escolhidas e justificadas em BL-05, BL-06 e BL-15, com TC-PRS-01 como critério. |
 | Q-05 | HTML entra no MVP | ADR-kos-003 item 5 deixa de ser aberto. BL-22 passa para dentro do caminho vertical (BL-08 depende dele). GS-SPEC-003 e GS-CONF-002 deixam de ser condicionais. A tensão do achado 6 (§2) está resolvida. |
 
-Os ADRs continuam **Propostos** até Issei aprová-los (BL-00).
+Os ADR-kos-001..008 foram **aceitos** por Issei em 2026-10-22 (BL-00 concluído).

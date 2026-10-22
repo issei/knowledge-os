@@ -19,7 +19,7 @@ Especificação verificável do MVP, no formato Spec-Driven Development. Nenhuma
 | [02-modelo-de-dados.md](02-modelo-de-dados.md) | 0B | Identidades lógica/versão/fragmento, localizadores, DDL de `index.sqlite` e `audit.sqlite`, estratégia por tabela |
 | [03-contratos.md](03-contratos.md) | 0C | CTR-01..10 com entradas, saídas, invariantes, falhas e testes |
 | [04-benchmark.md](04-benchmark.md) | 0D | Golden set de 14 casos sobre C0, lacunas, métricas separadas, linha de base e calibração |
-| [05-adrs.md](05-adrs.md) | 0E | ADR-kos-001..008 (propostos) |
+| [05-adrs.md](05-adrs.md) | 0E | ADR-kos-001..008 (aceitos em 2026-10-22) |
 | [06-plano-de-testes.md](06-plano-de-testes.md) | — | Níveis, fixtures, testes transversais, critério de pronto |
 | [07-riscos.md](07-riscos.md) | — | RSK-01..14 |
 | [08-backlog.md](08-backlog.md) | 0F | BL-00..23 por dependência; BL-01..14 + BL-22 = caminho vertical mínimo |
@@ -46,4 +46,4 @@ Especificação verificável do MVP, no formato Spec-Driven Development. Nenhuma
 
 ## Antes da Fase 1
 
-Aprovar ou alterar os ADRs (BL-00). As questões Q-01, Q-02, Q-05 e Q-19 já foram respondidas.
+ADRs aceitos em 2026-10-22 (BL-00 concluído). As questões Q-01, Q-02, Q-05 e Q-19 já foram respondidas.
