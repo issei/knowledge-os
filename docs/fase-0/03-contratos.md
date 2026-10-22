@@ -301,3 +301,11 @@ Códigos fechados:
 - TC-AUD-03 Erro de parsing → linha em `processing_error` com `stage`, `error_code`, `path_text`.
 - TC-AUD-04 Erro com código fora do catálogo falha o teste (lista fechada).
 - TC-AUD-05 Citação auditada continua verificável após apagar o índice (releitura direta do blob no Git).
+
+**Notas de implementação (BL-12)**
+- `kos search` grava o `query_event` e confirma a transação antes de buscar (inv. 1). Uma busca que falha, por exemplo com `E_QUERY_EMPTY`, deixa o evento sem resultados. A saída JSON traz o `query_id`.
+- `index_fingerprint` é o sha256 de (versão de esquema, impressões dos perfis, revisão-alvo da última execução concluída de cada repositório). Depende do conteúdo, não da execução: um rebuild das mesmas revisões mantém o valor.
+- Consultar não cria índice: sem `index.sqlite`, a busca cria só o `audit.sqlite` e falha com `E_NO_INDEXED_REVISION`.
+- `record_citations` valida cada citação (TC-CIT-05, 06) antes de gravar; `claim_ids` liga a citação às afirmações da resposta e fica `[]` quando não há resposta (BL-13 preenche).
+- `kos audit verify QUERY_ID --repo NOME=CAMINHO [--json]` (`kos.audit.verify.v1`) reconfere as citações gravadas relendo os blobs, sem abrir o índice (TC-AUD-05). O tipo de mídia sai da extensão do caminho, pela mesma tabela da descoberta. Consulta desconhecida = `E_FILTER_INVALID`.
+- `kos cite` avulso não grava auditoria: não é consulta. As citações auditadas são as de uma resposta (`kos ask`, BL-13).

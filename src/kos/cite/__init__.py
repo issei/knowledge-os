@@ -106,7 +106,7 @@ def cite(home: Path, fragment_keys: list[str], *, commit: str | None = None,
         repo_dir = (repos or {}).get(row["repo"]) or _local_path(row["origin_url"])
         cache_key = (row["repo"], row["blob_oid"])
         if cache_key not in blobs:
-            blobs[cache_key] = _read_blob(repo_dir, row["blob_oid"])
+            blobs[cache_key] = read_blob(repo_dir, row["blob_oid"])
         out.append(_build(no, row, blobs[cache_key], lines))
     return out
 
@@ -144,7 +144,7 @@ def _local_path(origin_url: str | None) -> Path | None:
     return Path(unquote(parsed.path)) if parsed.scheme == "file" else None
 
 
-def _read_blob(repo_dir: Path | None, blob_oid: str) -> bytes | str:
+def read_blob(repo_dir: Path | None, blob_oid: str) -> bytes | str:
     """Conteúdo do blob, ou a nota E_BLOB_UNREADABLE explicando por que não foi lido."""
     if repo_dir is None:
         return "E_BLOB_UNREADABLE: caminho do repositório desconhecido"
@@ -167,21 +167,28 @@ def _build(no: int, row: dict, blob: bytes | str, lines: tuple[int, int] | None)
     base = dict(citation_no=no, fragment_key=row["key"], repo_name=row["repo"], path_text=row["path"],
                 commit_oid=row["commit"], blob_oid=row["blob_oid"], locator=loc, quoted_text=quoted,
                 quoted_sha256=expected_sha, is_generated=row["is_generated"])
+    verification, note = verify(blob, loc, expected_sha, row["media_type"])
+    return Citation(**base, verification=verification, verification_note=note)
+
+
+def verify(blob: bytes | str, loc: Locator, expected_sha: str, media_type: str) -> tuple[str, str | None]:
+    """Estado de verificação de um trecho contra o blob relido: (estado, nota).
+
+    `blob` em texto é a nota de falha de leitura de `read_blob`. Usada pela citação
+    e pela reconferência da auditoria, que não tem índice (TC-AUD-05).
+    """
     if isinstance(blob, str):
-        return Citation(**base, verification="unverified", verification_note=blob)
+        return "unverified", blob
     if loc.start_byte is None or loc.end_byte is None or loc.end_byte > len(blob):
-        return Citation(**base, verification="unverified",
-                        verification_note="o intervalo de bytes não cabe no blob relido")
+        return "unverified", "o intervalo de bytes não cabe no blob relido"
     raw = blob[loc.start_byte:loc.end_byte]
     literal = normalize(raw)
     if hashlib.sha256(literal.encode("utf-8")).hexdigest() == expected_sha:
-        return Citation(**base, verification="verified_exact")
-    rebuilt = registry.expected_text(row["media_type"], raw)
+        return "verified_exact", None
+    rebuilt = registry.expected_text(media_type, raw)
     if rebuilt != literal and hashlib.sha256(rebuilt.encode("utf-8")).hexdigest() == expected_sha:
-        return Citation(**base, verification="verified_normalized",
-                        verification_note="texto visível do recorte HTML, sem marcação")
-    return Citation(**base, verification="unverified",
-                    verification_note="o texto relido do blob não confere com o trecho indexado")
+        return "verified_normalized", "texto visível do recorte HTML, sem marcação"
+    return "unverified", "o texto relido do blob não confere com o trecho indexado"
 
 
 def _subrange(row: dict, blob: bytes | str, lines: tuple[int, int]) -> tuple[Locator, str]:
