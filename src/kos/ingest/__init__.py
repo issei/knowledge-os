@@ -56,7 +56,8 @@ class IngestResult:
 
 
 def ingest_full(home: Path, repo: Path, *, rev: str = "HEAD", policy: Policy | None = None,
-                repo_name: str | None = None) -> IngestResult:
+                repo_name: str | None = None, mode: str = "full") -> IngestResult:
+    """Indexa a árvore inteira de `rev`. `mode="rebuild"` é usado pelo `kos rebuild` (CTR-05)."""
     policy = policy or Policy.default()
     repo = Path(repo)
     commit, files = discover(repo, rev, policy)
@@ -64,7 +65,7 @@ def ingest_full(home: Path, repo: Path, *, rev: str = "HEAD", policy: Policy | N
     conn = _connect(home / "index.sqlite")
     try:
         name = repo_name or repo.resolve().name
-        run_id, run_uuid = _start_run(conn, repo, name, commit, policy)
+        run_id, run_uuid = _start_run(conn, repo, name, commit, policy, mode)
         return _run(conn, repo, name, commit, files, policy, run_id, run_uuid)
     finally:
         conn.close()
@@ -104,7 +105,7 @@ def _begin(conn: sqlite3.Connection) -> None:
         raise
 
 
-def _start_run(conn, repo: Path, name: str, commit: str, policy: Policy) -> tuple[int, str]:
+def _start_run(conn, repo: Path, name: str, commit: str, policy: Policy, mode: str) -> tuple[int, str]:
     tree_oid, committed_at = _commit_info(repo, commit)
     object_format = _object_format(repo)
     _begin(conn)
@@ -121,8 +122,8 @@ def _start_run(conn, repo: Path, name: str, commit: str, policy: Policy) -> tupl
         run_uuid = str(uuid.uuid4())
         cur = conn.execute(
             "INSERT INTO ingest_run(run_uuid, repo_id, mode, target_revision_id, policy_sha256,"
-            " tool_version, started_at, status) VALUES (?, ?, 'full', ?, ?, ?, ?, 'running')",
-            (run_uuid, repo_id, revision_id, policy.sha256, __version__, _now()))
+            " tool_version, started_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'running')",
+            (run_uuid, repo_id, mode, revision_id, policy.sha256, __version__, _now()))
         conn.execute("COMMIT")
     except BaseException:
         conn.execute("ROLLBACK")
