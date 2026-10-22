@@ -1,0 +1,156 @@
+papel: P3
+casos:
+  - id: GS-LEX-001
+    veredito: sem_defeito
+    defeitos: []
+  - id: GS-LEX-002
+    veredito: sem_defeito
+    defeitos: []
+  - id: GS-SPEC-001
+    veredito: defeito
+    defeitos:
+      - tipo: evidencia_errada
+        gravidade: media
+        descricao: "A fonte relevante ADR-ap-001 linhas 25-28 nao contem o piso de 7:1 nem 'Camada 3'; essas linhas tratam do namespace .ap-* e da excecao nomeada. O piso aparece na tabela de contrastes, linha 46. Fonte com linha errada pune/mal-credita o recall."
+        prova:
+          caminho: "docs/specs/pages/apresentação/ADR-ap-001-namespace-e-excecao-dark-tech.md"
+          linhas: "46"
+          trecho: "| `#FAFAFA` sobre `#17171C` (texto L3 em card) | **17.11:1** | 7 | ok — evolução 11 |"
+      - tipo: vazamento_lexical
+        gravidade: baixa
+        descricao: "A pergunta ('piso de contraste', 'Camada 3', 'apresentacao') repete quase literalmente o trecho esperado 'e um piso de contraste de **7:1** na Camada 3'. Caso rotulado spec_fact e na pratica lexical."
+        prova:
+          caminho: "AGENTS.md"
+          linhas: "121"
+          trecho: "e um piso de contraste de **7:1** na Camada 3. **É a única exceção à paleta Dark Tech.**"
+  - id: GS-SPEC-002
+    veredito: sem_defeito
+    defeitos: []
+  - id: GS-SPEC-003
+    veredito: defeito
+    defeitos:
+      - tipo: evidencia_incompleta
+        gravidade: media
+        descricao: "A tabela de KPIs da mesma pagina traz a linha 'Retrieval Latency P95 < 800ms' sob o cabecalho 'SLO sugerido' (linha 2133), evidencia tao boa quanto 1015 e a mais explicita como SLO de latencia de recuperacao. Esta fora de fontes_relevantes e de evidencia_esperada (so 1015 e 1991)."
+        prova:
+          caminho: "src/knowledge-os-presentation.html"
+          linhas: "2133"
+          trecho: "<tr><td>Retrieval Latency P95</td><td>Tempo de resposta da camada de retrieval.</td><td>&lt; 800ms</td></tr>"
+  - id: GS-CODE-001
+    veredito: defeito
+    defeitos:
+      - tipo: evidencia_incompleta
+        gravidade: media
+        descricao: "O ADR-ap-001 resume exatamente a resposta (hook PostToolUse bloqueia a escrita de hexadecimal; teste de tokens reprova o build) e cita tests/apresentacao.tokens.test.mjs como segundo mecanismo. Nem o ADR linha 74 nem o teste constam em fontes_relevantes; um sistema que cite o ADR e punido."
+        prova:
+          caminho: "docs/specs/pages/apresentação/ADR-ap-001-namespace-e-excecao-dark-tech.md"
+          linhas: "74"
+          trecho: "`scripts/guard-ap-tokens.mjs` (hook `PostToolUse`) bloqueia a escrita de qualquer hexadecimal em `src/apresentacao.html` e `src/js/apresentacao/**`, e `tests/apresentacao.tokens.test.mjs` reprova o build se um par de contraste regredir."
+      - tipo: evidencia_errada
+        gravidade: baixa
+        descricao: "fonte AGENTS.md linhas 124-125: a linha 124 e 'Todo seletor e custom property usa o prefixo ap-', irrelevante; a regra do hexadecimal comeca na 125."
+        prova:
+          caminho: "AGENTS.md"
+          linhas: "124-125"
+          trecho: "- Todo seletor e custom property usa o prefixo `ap-`, para impedir vazamento.\n- **Nenhum hexadecimal** pode ser escrito fora de `src/apresentacao.css`"
+  - id: GS-CODE-002
+    veredito: defeito
+    defeitos:
+      - tipo: resposta_errada
+        gravidade: alta
+        descricao: "A afirmacao obrigatoria diz que a funcao 'fill' grava o bloco no HTML. fill() so substitui o bloco em memoria e devolve {path,file,prev,next}; quem grava em disco e o writeFileSync no laco do nivel superior (linha 608), que nao e funcao. Resposta correta: pfBlock monta o bloco, fill injeta em memoria e writeFileSync grava."
+        prova:
+          caminho: "scripts/gen-portfolio.mjs"
+          linhas: "608"
+          trecho: "for (const t of stale) writeFileSync(t.path, t.next);"
+      - tipo: vazamento_lexical
+        gravidade: baixa
+        descricao: "A pergunta contem 'PF:START', token literal que aparece em pfBlock (linha 386) e na chamada de fill (593); busca lexical acha direto. Classe code, mas o ancoramento e lexical."
+        prova:
+          caminho: "scripts/gen-portfolio.mjs"
+          linhas: "386"
+          trecho: "const pfBlock = `<!-- PF:START"
+  - id: GS-CODE-003
+    veredito: defeito
+    defeitos:
+      - tipo: evidencia_incompleta
+        gravidade: alta
+        descricao: "Existe outro teste que verifica exatamente o enunciado, com o titulo quase identico a pergunta ('Camada 3', 'contraste minimo de 7:1'): o teste Playwright evolucao 11. Esta ausente de fontes e evidencia; um sistema que cite tests/apresentacao.spec.js e punido, e a afirmacao obrigatoria 'INV-AP-02' exclui essa resposta valida. O proprio arquivo de tokens tem ainda um segundo teste INV-AP-02 (Camadas 1 e 2, linha 44)."
+        prova:
+          caminho: "tests/apresentacao.spec.js"
+          linhas: "262"
+          trecho: "test('evolução 11 · texto da Camada 3 em contraste mínimo de 7:1', async ({ page }) => {"
+      - tipo: pergunta_ambigua
+        gravidade: media
+        descricao: "'Qual teste' admite duas respostas corretas (teste unitario de tokens e teste e2e Playwright), com ids e arquivos diferentes."
+        prova:
+          caminho: "tests/apresentacao.tokens.test.mjs"
+          linhas: "39"
+          trecho: "test('INV-AP-02 · contraste do texto da Camada 3 ≥ 7:1 (evolução 11)'"
+      - tipo: vazamento_lexical
+        gravidade: media
+        descricao: "A pergunta ('contraste', '7:1', 'Camada 3', 'apresentacao') repete o titulo do teste esperado; classe code mas e lexical."
+        prova:
+          caminho: "tests/apresentacao.tokens.test.mjs"
+          linhas: "39"
+          trecho: "contraste do texto da Camada 3 ≥ 7:1"
+  - id: GS-CONF-001
+    veredito: defeito
+    defeitos:
+      - tipo: pergunta_ambigua
+        gravidade: media
+        descricao: "'O projeto' pode ser o site (Vite 6) ou o subprojeto LifeOS/life3d (sem build). O proprio ADR-001 diz 'O projeto vive num site pessoal estatico', o que sem o INDEX leria-se como o site inteiro; as duas leituras dao respostas diferentes e o 'conflito' depende de escopo que o ADR nao declara."
+        prova:
+          caminho: "docs/specs/14-adr/ADR-001-sem-build.md"
+          linhas: "11-14"
+          trecho: "O projeto vive num site pessoal estático (mauricio.issei.com.br) mantido por\numa pessoa."
+      - tipo: evidencia_incompleta
+        gravidade: media
+        descricao: "A afirmacao mais direta de que o site usa Vite (Tech Stack) em AGENTS.md linha 11 nao esta listada, nem README. So ficam package.json, ARCHITECTURE 395 (rel 1)."
+        prova:
+          caminho: "AGENTS.md"
+          linhas: "11"
+          trecho: "- **Tech Stack**: Vite 6, Tailwind CSS v4 (native imports), Vanilla JS (ES6 Modules)."
+  - id: GS-CONF-002
+    veredito: defeito
+    defeitos:
+      - tipo: classe_errada
+        gravidade: alta
+        descricao: "Nao e conflito real: 18 KPIs cognitivos (4 camadas) + 4 KPIs da camada FinOps = 22 em 5 camadas. A tabela tem Substrate 4, Retrieval 5, Reasoning 5, Outcome 4 (=18) e FinOps 4. A linha 690 ja diz '18 KPIs cognitivos + FinOps'. A resposta esperada exige relatar divergencia e proibe 'um unico numero', penalizando a resposta correta que reconcilia (22 total, 18 sem FinOps)."
+        prova:
+          caminho: "src/knowledge-os-presentation.html"
+          linhas: "690"
+          trecho: "<div class=\"kpi-value\">18</div><div class=\"kpi-label\">KPIs cognitivos + FinOps</div>"
+      - tipo: evidencia_incompleta
+        gravidade: baixa
+        descricao: "Linha 710 tambem diz 22 KPIs cognitivos e nao esta listada."
+        prova:
+          caminho: "src/knowledge-os-presentation.html"
+          linhas: "710"
+          trecho: "<a href=\"#observabilidade\">22 KPIs cognitivos</a>"
+  - id: GS-CONF-003
+    veredito: defeito
+    defeitos:
+      - tipo: classe_errada
+        gravidade: media
+        descricao: "Rotulado conflict, mas o outcome esperado e abstained e o proprio golden diz que o fato e 46 (verificavel por listagem). E um caso de afirmacao documental defasada, nao um conflito entre fontes (so uma fonte, AGENTS.md). Alem disso afirmacoes_proibidas pune '46 paginas', o valor correto, e a pergunta tem resposta verificavel no corpus (46 arquivos src/*.html)."
+        prova:
+          caminho: "AGENTS.md"
+          linhas: "64-65"
+          trecho: "CodeGraph has no HTML parser, so the 36\n`src/*.html` pages — this repo's actual feature units"
+  - id: GS-ABS-001
+    veredito: sem_defeito
+    defeitos: []
+  - id: GS-ABS-002
+    veredito: defeito
+    defeitos:
+      - tipo: evidencia_incompleta
+        gravidade: media
+        descricao: "A pagina declara tambem meta Recall@k > 0.85 (tabela de KPIs), diferente da 0.75 do criterio de saida. A afirmacao obrigatoria cita so Recall@10 > 0.75, e a fonte 2130 nao esta listada; resposta que mencione as duas metas ficaria com cobertura inconsistente."
+        prova:
+          caminho: "src/knowledge-os-presentation.html"
+          linhas: "2130"
+          trecho: "<td>Recall@k</td><td>% de docs relevantes nos top-k recuperados.</td><td>&gt; 0.85</td></tr>"
+  - id: GS-ABS-003
+    veredito: sem_defeito
+    defeitos: []

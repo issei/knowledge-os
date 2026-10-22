@@ -1,0 +1,42 @@
+papel: P1
+perguntas:
+  - pergunta: "Qual é o comando npm que atualiza as traduções em inglês e depois verifica se estão em dia?"
+    classe: lexical
+    quem_pergunta: "agente"
+    motivo: "Um agente que editou uma página em português precisa do comando exato para sincronizar o espelho em inglês antes de terminar a tarefa."
+  - pergunta: "Qual é o nível de contraste de acessibilidade que o site precisa atingir? É WCAG AA ou AAA?"
+    classe: spec_fact
+    quem_pergunta: "dev_novo"
+    motivo: "Um dev novo que vai mexer nas cores ou nos textos precisa saber qual é a meta de acessibilidade que vale para o projeto."
+  - pergunta: "Quando alguém digita um endereço antigo do site, qual função do CloudFront reescreve o caminho?"
+    classe: code
+    quem_pergunta: "dono"
+    motivo: "O dono, ao notar que um link antigo não abre, quer saber qual código de redirecionamento está em ação para corrigir ou apagar a regra."
+  - pergunta: "Os documentos de acessibilidade concordam sobre quais páginas estão isentas das regras? Se o relatório diz uma coisa e a lista de exceções diz outra, qual vale?"
+    classe: conflict
+    quem_pergunta: "agente"
+    motivo: "Um agente que vai corrigir uma página precisa saber se ela está oficialmente isenta, e pode encontrar relatório e lista de exceções em desacordo."
+  - pergunta: "Quanto o Maurício paga por mês de hospedagem na AWS?"
+    classe: no_answer
+    quem_pergunta: "dono"
+    motivo: "O dono pode imaginar que a documentação de infraestrutura registra custos, mas custo financeiro costuma não estar num repositório de código."
+  - pergunta: "Quantas pessoas únicas visitaram o site no mês passado?"
+    classe: no_answer
+    quem_pergunta: "dono"
+    motivo: "O dono quer saber o tráfego do portfólio para medir resultado, uma informação que normalmente fica em ferramenta de analytics e não no código."
+  - pergunta: "Em que lugares do código o diretório lifeos é usado? Não consigo achar onde ele aparece."
+    classe: lexical
+    quem_pergunta: "dev_novo"
+    motivo: "Um dev novo que encontra uma pasta com nome estranho quer localizar as referências para entender se ela é parte do site ou algo separado."
+  - pergunta: "Existe alguma decisão registrada que permita uma página fugir do tema escuro padrão do site?"
+    classe: spec_fact
+    quem_pergunta: "agente"
+    motivo: "Um agente que recebe a tarefa de ajustar o visual precisa saber se há exceção documentada antes de trocar cores para o padrão."
+  - pergunta: "Como o gerador de SEO monta a meta description de cada página que é publicada?"
+    classe: code
+    quem_pergunta: "dev_novo"
+    motivo: "Um dev novo que quer mudar o texto que aparece no Google precisa entender se a descrição vem de um arquivo, de um campo ou de uma regra no script."
+  - pergunta: "Antes de criar uma página nova no site, quais documentos eu preciso ler e em que ordem?"
+    classe: spec_fact
+    quem_pergunta: "dev_novo"
+    motivo: "Um dev novo que vai criar a primeira página quer seguir o processo documentado, sem pular etapas como a especificação e os testes."
